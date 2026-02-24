@@ -508,26 +508,26 @@ def render_guide_center():
     guide_data = {
 
         "CÁC YÊU CẦU": [
-            ("Check đối thủ T5 hàng tuần", "https://docs.google.com"),
-            ("Ticket E-com - Quầy", "https://docs.google.com"),
-            ("Link lưu trữ hồ sơ", "https://docs.google.com"),
+            ("Check đối thủ T5 hàng tuần", "https://drive.google.com/drive/folders/1CjjaWQ6AXM-gh70s6MXfQHLYmhdsQ6gY"),
+            ("Ticket E-com - Quầy", "https://gemini.google.com/share/75ec867c7a43"),
+            ("Link lưu trữ hồ sơ", "https://docs.google.com/spreadsheets/d/1hkvZYjtHQjWATXlICl2Dhw7UHFTaViQx/edit?gid=359318821#gid=359318821"),
         ],
 
         "CÁC BÁO CÁO": [
-            ("BC nhu cầu khách quan tâm tour hàng ngày", "https://docs.google.com"),
-            ("Báo cáo chi phí chi nhánh ghép", "https://docs.google.com"),
-            ("Báo cáo khách bị từ chối visa", "https://docs.google.com"),
-            ("Báo cáo phát sinh VU 2025", "https://docs.google.com"),
-            ("Đánh giá kênh PR online", "https://docs.google.com"),
-            ("Báo cáo tình hình khách theo sự vụ 2025", "https://docs.google.com"),
-            ("Báo cáo khách phản ánh HDV", "https://docs.google.com"),
-            ("Báo cáo khách hủy tour theo thị trường", "https://docs.google.com"),
-            ("Khảo sát nhu cầu khách hàng", "https://docs.google.com"),
-            ("Kế hoạch Telesale", "https://docs.google.com"),
+            ("BC nhu cầu khách quan tâm tour hàng ngày", "https://docs.google.com/spreadsheets/d/1xN38cSycrwYpKd0ho3O7zhVtP6zEIjdXW03kxBSseuc/edit"),
+            ("Báo cáo chi phí chi nhánh ghép", "https://docs.google.com/spreadsheets/d/1rcQgEkYsD46B4Wk1ZzcmgHVZfVsyqcSG/edit?gid=1378604091#gid=1378604091"),
+            ("Báo cáo khách bị từ chối visa", "https://docs.google.com/spreadsheets/d/102pizHsZK-dXdqaz8LG_48dh5Phiqe8A/edit?gid=1735879678#gid=1735879678"),
+            ("Báo cáo phát sinh VU 2025", "https://docs.google.com/spreadsheets/d/1vZTugGe1QXLwQhy9bxUGpkKjmD3YInLm8D8F_8Lo6jc/edit"),
+            ("Đánh giá kênh PR online", "https://drive.google.com/drive/folders/1j0wakn6HFirnv4by5-77Nopjkh6pkaj_"),
+            ("Báo cáo tình hình khách theo sự vụ 2025", "https://docs.google.com/spreadsheets/d/1X8f_VB5zsA65YCytpVPZ4ymyOidAVFQM_uJ_n2LJfuI/edit?gid=0#gid=0"),
+            ("Báo cáo khách phản ánh HDV", "https://docs.google.com/spreadsheets/d/1ny4MgIOY9oS5VZFAmEDfFW8bp0KCbdcN/edit?gid=1378604091#gid=1378604091"),
+            ("Báo cáo khách hủy tour theo thị trường", "https://docs.google.com/spreadsheets/d/1kuy-bE4hbGgfBDArI55MYDcG4kQGquNf/edit?gid=247600996#gid=247600996"),
+            ("Khảo sát nhu cầu khách hàng", "https://docs.google.com/spreadsheets/d/1Zcv7EXGzT-urIHpMOTvdFdcUgx16vkS1/edit?gid=283996237#gid=283996237"),
+            ("Kế hoạch Telesale", "http://drive.google.com/drive/folders/1aK1fv01nFGoD1MkTRtv93uiDYJ2PgeYl"),
         ],
 
         "KH TRUYỀN THÔNG 2025": [
-            ("Lịch đăng bài Fanpage Vietravel hàng tuần", "https://docs.google.com"),
+            ("Lịch đăng bài Fanpage Vietravel hàng tuần", "https://docs.google.com/spreadsheets/d/15oTJTvTa95SREy66MR6SnsLhg8QtWFhT-ozR7DKIXms/edit?gid=1127315367#gid=1127315367"),
         ],
 
         "THÔNG TIN CHUNG": [
@@ -711,6 +711,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

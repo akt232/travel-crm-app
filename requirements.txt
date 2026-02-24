@@ -2,7 +2,9 @@ streamlit
 pandas
 plotly
 google-generativeai
+openai
 gspread
 oauth2client
 requests
 beautifulsoup4
+lxml

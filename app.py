@@ -452,18 +452,32 @@ Khách nói: {cust['msg']}
     # ================= RIGHT =================
     with col_right:
 
-        # ===== AI TRA CỨU NỘI BỘ =====
-        st.subheader("⚡ AI Tra cứu nội bộ")
+    st.subheader("⚡ AI Tra cứu nội bộ")
 
-        user_q = st.text_input("Hỏi dữ liệu công ty")
+    # Ô nhập câu hỏi
+    user_q = st.text_input("Hỏi dữ liệu công ty", key="internal_ai_input")
 
-        if st.button("Tra cứu"):
+    # Nút tra cứu
+    if st.button("Tra cứu nội bộ", key="internal_ai_btn"):
 
+        if user_q.strip() == "":
+            st.warning("Vui lòng nhập câu hỏi")
+        else:
             res = ask_company_ai(user_q)
 
             st.session_state.chat_history.append(("Bạn", user_q))
             st.session_state.chat_history.append(("AI", res))
 
+    st.divider()
+
+    # ===== HIỂN THỊ LỊCH SỬ CHAT =====
+    st.subheader("💬 Lịch sử AI")
+
+    for role, msg in st.session_state.chat_history:
+        if role == "Bạn":
+            st.markdown(f"**🧑 {role}:** {msg}")
+        else:
+            st.markdown(f"**🤖 {role}:** {msg}")
         # ===== AI SO SÁNH TOUR =====
         st.subheader("📊 So sánh 2 tour")
 
@@ -703,25 +717,80 @@ def load_company_knowledge():
         pass
 
     return text
+@st.cache_data
+def load_guide_sheet():
 
+    if not st.session_state.guide_sheet_url:
+        return pd.DataFrame()
 
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive"
+    ]
+
+    creds_dict = json.loads(st.secrets["gcp_service_account"])
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    client = gspread.authorize(creds)
+
+    sheet = client.open_by_url(st.session_state.guide_sheet_url)
+    ws = sheet.sheet1
+
+    data = ws.get_all_records()
+    return pd.DataFrame(data)
+def load_company_knowledge():
+
+    text = ""
+
+    # ===== VISA DATA =====
+    text += visa_knowledge + "\n"
+
+    # ===== TOUR DATA =====
+    try:
+        tour_df = load_tour_sheet()
+        if not tour_df.empty:
+            text += "\n=== TOUR DATA ===\n"
+            text += tour_df.to_string()
+    except:
+        pass
+
+    # ===== GUIDE DATA =====
+    try:
+        guide_df = load_guide_sheet()
+        if not guide_df.empty:
+            text += "\n=== GUIDE DATA ===\n"
+            text += guide_df.to_string()
+    except:
+        pass
+
+    return text
 def ask_company_ai(question):
 
     knowledge = load_company_knowledge()
 
     prompt = f"""
-Bạn là chuyên gia sản phẩm Vietravel.
+Bạn là trợ lý nội bộ công ty du lịch Vietravel.
 
 Dữ liệu nội bộ công ty:
 {knowledge}
 
-Câu hỏi:
+Câu hỏi nhân viên:
 {question}
 
-Trả lời chính xác theo dữ liệu công ty.
+Hãy trả lời chính xác theo dữ liệu.
+Nếu không có thông tin thì nói:
+"Không tìm thấy trong dữ liệu nội bộ".
 """
 
-    return ask_chatgpt(prompt)
+    try:
+        response = client.chat.completions.create(
+            model="gpt-5-mini",
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        return response.choices[0].message.content
+
+    except Exception as e:
+        return str(e)
 # =====================================================
 # SETTINGS
 # =====================================================
@@ -813,6 +882,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

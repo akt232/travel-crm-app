@@ -20,7 +20,7 @@ CONFIG_FILE = "config.json"
 
 DEFAULT_SHEET = ""
 DEFAULT_TOUR_SHEET = ""
-DEFAULT_VISA_SHEET = ""
+DEFAULT_GUIDE_SHEET = "https://docs.google.com/spreadsheets/d/1b7z00QcNuYjK54ikc2ctbxsF3Ok7snGKSx57LChIZpA/edit#gid=0"
 
 LOGO_URL = "https://travel.com.vn/Content/images/logo.png"
 
@@ -42,8 +42,7 @@ def load_config():
 
     return {
         "sheet_url": DEFAULT_SHEET,
-        "tour_sheet_url": DEFAULT_TOUR_SHEET,
-        "visa_sheet_url": DEFAULT_VISA_SHEET
+        "tour_sheet_url": DEFAULT_TOUR_SHEET
     }
 
 
@@ -68,8 +67,8 @@ if "sheet_url" not in st.session_state:
 if "tour_sheet_url" not in st.session_state:
     st.session_state.tour_sheet_url = config.get("tour_sheet_url", "")
 
-if "visa_sheet_url" not in st.session_state:
-    st.session_state.visa_sheet_url = config.get("visa_sheet_url", "")
+if "guide_sheet_url" not in st.session_state:
+    st.session_state.guide_sheet_url = DEFAULT_GUIDE_SHEET
 
 if "selected_customer" not in st.session_state:
     st.session_state.selected_customer = None
@@ -127,7 +126,7 @@ def ask_chatgpt(prompt):
 
 
 # =====================================================
-# GOOGLE SHEET CONNECT
+# GOOGLE SHEET
 # =====================================================
 
 def connect_sheet(url):
@@ -137,7 +136,6 @@ def connect_sheet(url):
         "https://www.googleapis.com/auth/drive"
     ]
 
-    # Lấy credentials từ Streamlit Secrets
     creds_dict = st.secrets["gcp_service_account"]
 
     creds = ServiceAccountCredentials.from_json_keyfile_dict(
@@ -150,6 +148,8 @@ def connect_sheet(url):
     sheet = client.open_by_url(url).sheet1
 
     return sheet
+
+
 def load_sheet():
     try:
         sheet = connect_sheet(st.session_state.sheet_url)
@@ -161,10 +161,16 @@ def load_sheet():
 
 def load_tour_sheet():
     try:
-        if not st.session_state.tour_sheet_url:
-            return pd.DataFrame()
-
         sheet = connect_sheet(st.session_state.tour_sheet_url)
+        data = sheet.get_all_records()
+        return pd.DataFrame(data)
+    except:
+        return pd.DataFrame()
+
+
+def load_guide_sheet():
+    try:
+        sheet = connect_sheet(st.session_state.guide_sheet_url)
         data = sheet.get_all_records()
         return pd.DataFrame(data)
     except:
@@ -218,9 +224,7 @@ def suggest_tour(message):
 
     for _, row in df.iterrows():
 
-        text = " ".join([
-            str(row).lower()
-        ])
+        text = " ".join([str(row).lower()])
 
         score = 0
 
@@ -268,14 +272,6 @@ def render_dashboard():
     col3.metric("Tổng khách", len(df))
     col4.metric("Tổng doanh thu", f"{df['Giá'].sum():,.0f} đ")
 
-    route_df = df.groupby("Tour").agg({
-        "Tên": "count",
-        "Giá": "sum"
-    }).reset_index()
-
-    fig = px.bar(route_df, x="Tour", y="Giá", color="Tour")
-    st.plotly_chart(fig, use_container_width=True)
-
 
 # =====================================================
 # SALES CENTER
@@ -285,7 +281,6 @@ def render_sales_center():
 
     col_left, col_mid, col_right = st.columns([1, 2, 1])
 
-    # ================= LEFT =================
     with col_left:
 
         st.subheader("Khách hàng")
@@ -294,7 +289,6 @@ def render_sales_center():
             if st.button(f"{cust['name']} - {cust['time']}", key=cust["id"]):
                 st.session_state.selected_customer = cust
 
-    # ================= CENTER =================
     with col_mid:
 
         cust = st.session_state.selected_customer
@@ -311,17 +305,15 @@ def render_sales_center():
             </div>
             """, unsafe_allow_html=True)
 
-            # ===== TOUR SUGGEST =====
             st.subheader("🎯 Tour phù hợp")
 
             suggest_df = suggest_tour(cust["msg"])
 
             if suggest_df.empty:
-                st.info("Không tìm thấy tour phù hợp")
+                st.info("Không tìm thấy tour")
             else:
                 st.dataframe(suggest_df)
 
-            # ===== AI REPLY =====
             st.subheader("🤖 AI gợi ý trả lời")
 
             if st.button("Gợi ý trả lời khách"):
@@ -329,13 +321,11 @@ def render_sales_center():
                 reply = ask_chatgpt(prompt)
                 st.success(reply)
 
-            # ===== STATUS =====
             status = st.selectbox(
                 "Trạng thái",
                 ["Đang theo dõi", "Đã chốt đơn", "Không chốt"]
             )
 
-            # ===== DEAL FORM =====
             if status == "Đã chốt đơn":
 
                 with st.form("deal"):
@@ -368,7 +358,6 @@ def render_sales_center():
                         if saved:
                             st.success("✅ Đã lưu Google Sheet")
 
-    # ================= RIGHT =================
     with col_right:
 
         st.subheader("AI Hỏi Tour")
@@ -407,7 +396,84 @@ def render_customer_orders():
         st.info("Chưa có dữ liệu")
         return
 
-    st.dataframe(df)
+    for idx, row in df.iterrows():
+
+        col1, col2, col3, col4, col5, col6 = st.columns([2,2,2,2,2,1])
+
+        with col1:
+            st.write(row.get('Ngày',''))
+
+        with col2:
+            st.write(row.get('Tên',''))
+
+        with col3:
+            st.write(row.get('Tour',''))
+
+        with col4:
+            st.write(row.get('Giá',''))
+
+        with col5:
+            st.write(row.get('Kênh',''))
+
+        with col6:
+
+            if st.button("❌", key=f"del_{idx}"):
+
+                ok = delete_row(idx + 2)
+
+                if ok:
+                    st.success("Đã xóa")
+                    st.rerun()
+
+
+# =====================================================
+# GUIDE CENTER
+# =====================================================
+
+def render_guide_center():
+
+    st.title("📘 Cẩm nang")
+
+    df = load_guide_sheet()
+
+    if df.empty:
+        st.warning("Không có dữ liệu")
+        return
+
+    keyword = st.text_input("🔎 Tìm kiếm")
+
+    if keyword:
+        mask = df.apply(
+            lambda row: keyword.lower() in str(row).lower(),
+            axis=1
+        )
+        df = df[mask]
+
+    st.dataframe(df, use_container_width=True)
+
+    st.divider()
+
+    st.subheader("🤖 Hỏi AI theo cẩm nang")
+
+    user_q = st.text_input("Nhập câu hỏi")
+
+    if st.button("Hỏi"):
+
+        knowledge = df.to_string()
+
+        prompt = f"""
+Dữ liệu cẩm nang:
+{knowledge}
+
+Câu hỏi:
+{user_q}
+
+Trả lời chính xác theo dữ liệu.
+"""
+
+        res = ask_chatgpt(prompt)
+
+        st.success(res)
 
 
 # =====================================================
@@ -431,7 +497,7 @@ visa_knowledge = visa_rule_1 + "\n" + visa_rule_2
 
 def visa_tab():
 
-    st.title("🛂 Visa Information Center")
+    st.title("🛂 Visa Information")
 
     nationality = st.text_input("Quốc tịch")
     destination = st.text_input("Điểm đến")
@@ -444,7 +510,7 @@ Dữ liệu:
 
 Khách quốc tịch {nationality} đi {destination}.
 
-Hãy tư vấn visa chi tiết.
+Tư vấn visa chi tiết.
 """
 
         result = ask_chatgpt(prompt)
@@ -498,7 +564,7 @@ st.sidebar.image(LOGO_URL, width=150)
 
 menu = st.sidebar.radio(
     "MENU",
-    ["Dashboard", "Sales Center", "Customers & Orders", "Visa Info", "Settings"]
+    ["Dashboard", "Sales Center", "Customers & Orders", "Guide Center", "Visa Info", "Settings"]
 )
 
 
@@ -514,6 +580,9 @@ elif menu == "Sales Center":
 
 elif menu == "Customers & Orders":
     render_customer_orders()
+
+elif menu == "Guide Center":
+    render_guide_center()
 
 elif menu == "Visa Info":
     visa_tab()

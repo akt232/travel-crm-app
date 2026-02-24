@@ -41,9 +41,10 @@ def load_config():
             return json.load(f)
 
     return {
-        "sheet_url": DEFAULT_SHEET,
-        "tour_sheet_url": DEFAULT_TOUR_SHEET
-    }
+    "sheet_url": DEFAULT_SHEET,
+    "tour_sheet_url": DEFAULT_TOUR_SHEET,
+    "guide_sheet_url": DEFAULT_GUIDE_SHEET
+}
 
 
 def save_config(data):
@@ -68,7 +69,7 @@ if "tour_sheet_url" not in st.session_state:
     st.session_state.tour_sheet_url = config.get("tour_sheet_url", "")
 
 if "guide_sheet_url" not in st.session_state:
-    st.session_state.guide_sheet_url = DEFAULT_GUIDE_SHEET
+    st.session_state.guide_sheet_url = config.get("guide_sheet_url", DEFAULT_GUIDE_SHEET)
 
 if "selected_customer" not in st.session_state:
     st.session_state.selected_customer = None
@@ -604,18 +605,24 @@ def render_settings():
         value=st.session_state.tour_sheet_url
     )
 
+    guide_link = st.text_input(
+        "Link Sheet Guide",
+        value=st.session_state.guide_sheet_url
+    )
+
     if st.button("Lưu cấu hình"):
 
         st.session_state.sheet_url = sheet_link
         st.session_state.tour_sheet_url = tour_link
+        st.session_state.guide_sheet_url = guide_link
 
         save_config({
             "sheet_url": sheet_link,
-            "tour_sheet_url": tour_link
+            "tour_sheet_url": tour_link,
+            "guide_sheet_url": guide_link
         })
 
         st.success("Đã lưu vĩnh viễn")
-
 
 # =====================================================
 # SIDEBAR
@@ -650,5 +657,6 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 

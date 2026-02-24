@@ -641,18 +641,18 @@ def render_settings():
 
     key = st.text_input("OpenAI API Key", value=st.session_state.api_key)
 
-   if st.button("Save API"):
+     if st.button("Save API"):
 
-    st.session_state.api_key = key
+        st.session_state.api_key = key
 
-    save_config({
-        "sheet_url": st.session_state.sheet_url,
-        "tour_sheet_url": st.session_state.tour_sheet_url,
-        "guide_sheet_url": st.session_state.guide_sheet_url,
-        "api_key": key
-    })
+        save_config({
+            "sheet_url": st.session_state.sheet_url,
+            "tour_sheet_url": st.session_state.tour_sheet_url,
+            "guide_sheet_url": st.session_state.guide_sheet_url,
+            "api_key": key
+        })
 
-    st.success("Saved permanently ✅")
+        st.success("Saved permanently ✅")
     st.divider()
 
     sheet_link = st.text_input(
@@ -717,6 +717,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

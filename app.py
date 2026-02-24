@@ -236,16 +236,27 @@ def suggest_tour(message):
 
     msg = message.lower()
 
+    # =========================
+    # STOP WORDS (từ rác)
+    # =========================
+
     STOP_WORDS = [
-        "tour", "du", "lịch", "bao", "nhiêu", "tiền",
-        "em", "anh", "chị", "mình", "tôi", "muốn",
-        "đi", "giúp", "với", "ạ", "ơi"
+        "anh", "chị", "em", "mình", "tôi",
+        "muốn", "đi", "du", "lịch", "tour",
+        "tháng", "ngày", "bao", "nhiêu",
+        "tiền", "ngân", "sách", "khoảng",
+        "tầm", "giúp", "với", "ạ", "ơi"
     ]
 
+    words = re.findall(r'\w+', msg)
+
     keywords = [
-        w for w in re.findall(r'\w+', msg)
-        if w not in STOP_WORDS and len(w) > 2
+        w for w in words
+        if w not in STOP_WORDS and len(w) > 2 and not w.isdigit()
     ]
+
+    if not keywords:
+        return pd.DataFrame()
 
     results = []
 
@@ -808,6 +819,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

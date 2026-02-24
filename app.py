@@ -497,50 +497,101 @@ def render_customer_orders():
 # =====================================================
 # GUIDE CENTER
 # =====================================================
-
 def render_guide_center():
 
     st.title("📘 Cẩm nang")
 
-    df = load_guide_sheet()
+    # =========================
+    # DATA MENU FULL
+    # =========================
 
-    if df.empty:
-        st.warning("Không có dữ liệu.")
-        return
+    guide_data = {
 
-    # Giả sử cột đầu tiên chứa tiêu đề mục
-    first_col = df.columns[0]
+        "CÁC YÊU CẦU": [
+            ("Check đối thủ T5 hàng tuần", "https://docs.google.com"),
+            ("Ticket E-com - Quầy", "https://docs.google.com"),
+            ("Link lưu trữ hồ sơ", "https://docs.google.com"),
+        ],
 
-    # Lấy danh sách mục lớn (dòng chữ bự)
-    sections = df[first_col].dropna().unique().tolist()
+        "CÁC BÁO CÁO": [
+            ("BC nhu cầu khách quan tâm tour hàng ngày", "https://docs.google.com"),
+            ("Báo cáo chi phí chi nhánh ghép", "https://docs.google.com"),
+            ("Báo cáo khách bị từ chối visa", "https://docs.google.com"),
+            ("Báo cáo phát sinh VU 2025", "https://docs.google.com"),
+            ("Đánh giá kênh PR online", "https://docs.google.com"),
+            ("Báo cáo tình hình khách theo sự vụ 2025", "https://docs.google.com"),
+            ("Báo cáo khách phản ánh HDV", "https://docs.google.com"),
+            ("Báo cáo khách hủy tour theo thị trường", "https://docs.google.com"),
+            ("Khảo sát nhu cầu khách hàng", "https://docs.google.com"),
+            ("Kế hoạch Telesale", "https://docs.google.com"),
+        ],
 
-    if not sections:
-        st.warning("Không tìm thấy mục.")
-        return
+        "KH TRUYỀN THÔNG 2025": [
+            ("Lịch đăng bài Fanpage Vietravel hàng tuần", "https://docs.google.com"),
+        ],
+
+        "THÔNG TIN CHUNG": [
+            ("Danh sách đăng ký hoàn tiền cho khách", "https://docs.google.com"),
+            ("Thông tin họp đoàn mẫu", "https://docs.google.com"),
+            ("Tạo QR code", "https://docs.google.com"),
+            ("Tổng hợp các chương trình ưu đãi tài chính", "https://docs.google.com"),
+            ("Video Sản Phẩm của BSP", "https://docs.google.com"),
+            ("Chi tiết mức chi Hoa Hồng", "https://docs.google.com"),
+            ("Khuyến mãi Xuân 2026", "https://docs.google.com"),
+            ("Tổng hợp quy trình Trung tâm FIT", "https://docs.google.com"),
+            ("TTX take note nhắc nhở", "https://docs.google.com"),
+        ],
+
+        "CẨM NANG TƯ VẤN DV SP BÁN": [
+            ("Thông tin tour Châu Âu", "https://docs.google.com"),
+            ("Thông tin tour Châu Mỹ", "https://docs.google.com"),
+            ("Thông tin tour Châu Úc", "https://docs.google.com"),
+            ("Thông tin tour Nhật Bản", "https://docs.google.com"),
+            ("Thông tin tour Hàn Quốc", "https://docs.google.com"),
+            ("Thông tin tour Thái Lan", "https://docs.google.com"),
+            ("Thông tin tour Tiếng Hoa", "https://docs.google.com"),
+            ("Thông tin tour Đông Nam Á (trừ Thái Lan)", "https://docs.google.com"),
+            ("Thông tin tour Miền Bắc", "https://docs.google.com"),
+            ("Thông tin tour Miền Trung", "https://docs.google.com"),
+            ("Thông tin tour Miền Nam", "https://docs.google.com"),
+            ("Đào tạo nội bộ FIT - Google Drive", "https://docs.google.com"),
+        ],
+    }
+
+    # =========================
+    # MENU LỚN
+    # =========================
 
     st.subheader("Chọn mục")
 
     cols = st.columns(3)
 
-    for i, sec in enumerate(sections):
+    for i, category in enumerate(guide_data.keys()):
         with cols[i % 3]:
-            if st.button(sec, use_container_width=True):
-                st.session_state["guide_section"] = sec
+            if st.button(category, use_container_width=True):
+                st.session_state["guide_category"] = category
 
-    # mặc định
-    if "guide_section" not in st.session_state:
-        st.session_state["guide_section"] = sections[0]
+    if "guide_category" not in st.session_state:
+        st.session_state["guide_category"] = list(guide_data.keys())[0]
 
-    selected = st.session_state["guide_section"]
+    selected_category = st.session_state["guide_category"]
 
     st.divider()
 
-    st.subheader(f"📄 Nội dung: {selected}")
+    st.subheader(selected_category)
 
-    # Lọc dữ liệu theo mục
-    filtered_df = df[df[first_col] == selected]
+    # =========================
+    # MENU NHỎ
+    # =========================
 
-    st.dataframe(filtered_df, use_container_width=True)
+    items = guide_data[selected_category]
+
+    for name, link in items:
+        st.link_button(
+            f"📄 {name}",
+            link,
+            use_container_width=True
+        )
 # =====================================================
 # VISA AI
 # =====================================================
@@ -660,6 +711,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

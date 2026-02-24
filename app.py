@@ -259,8 +259,18 @@ def render_dashboard():
         st.warning("Chưa có dữ liệu")
         return
 
-    df["Giá"] = pd.to_numeric(df["Giá"], errors="coerce").fillna(0)
-    df["Ngày"] = pd.to_datetime(df["Ngày"], errors="coerce")
+    # ===== CLEAN DATA =====
+    if "Giá" in df.columns:
+        df["Giá"] = (
+            df["Giá"]
+            .astype(str)
+            .str.replace(",", "")
+            .str.replace("đ", "")
+        )
+        df["Giá"] = pd.to_numeric(df["Giá"], errors="coerce").fillna(0)
+
+    if "Ngày" in df.columns:
+        df["Ngày"] = pd.to_datetime(df["Ngày"], errors="coerce")
 
     today = datetime.now().date()
     today_df = df[df["Ngày"].dt.date == today]
@@ -272,6 +282,38 @@ def render_dashboard():
     col3.metric("Tổng khách", len(df))
     col4.metric("Tổng doanh thu", f"{df['Giá'].sum():,.0f} đ")
 
+    st.divider()
+
+    # ===== DOANH THU THEO TOUR =====
+    if "Tour" in df.columns:
+
+        route_df = df.groupby("Tour").agg({
+            "Tên": "count",
+            "Giá": "sum"
+        }).reset_index()
+
+        fig1 = px.bar(
+            route_df,
+            x="Tour",
+            y="Giá",
+            color="Tour",
+            title="Doanh thu theo Tour"
+        )
+
+        st.plotly_chart(fig1, use_container_width=True)
+
+    # ===== DOANH THU THEO NGÀY =====
+    daily = df.groupby("Ngày")["Giá"].sum().reset_index()
+
+    fig2 = px.line(
+        daily,
+        x="Ngày",
+        y="Giá",
+        markers=True,
+        title="Doanh thu theo ngày"
+    )
+
+    st.plotly_chart(fig2, use_container_width=True)
 
 # =====================================================
 # SALES CENTER
@@ -589,3 +631,4 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+

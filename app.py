@@ -472,6 +472,10 @@ def render_customer_orders():
 # GUIDE CENTER
 # =====================================================
 
+# =====================================================
+# GUIDE CENTER
+# =====================================================
+
 def render_guide_center():
 
     st.title("📘 Cẩm nang")
@@ -482,26 +486,43 @@ def render_guide_center():
         st.warning("Không có dữ liệu")
         return
 
-    keyword = st.text_input("🔎 Tìm kiếm")
+    # ===== XÁC ĐỊNH CỘT MỤC =====
+    possible_cols = ["Mục", "Category", "Danh mục", "Loai"]
 
-    if keyword:
-        mask = df.apply(
-            lambda row: keyword.lower() in str(row).lower(),
-            axis=1
-        )
-        df = df[mask]
+    category_col = None
 
-    st.dataframe(df, use_container_width=True)
+    for col in possible_cols:
+        if col in df.columns:
+            category_col = col
+            break
+
+    # Nếu không có cột mục thì hiển thị thẳng
+    if not category_col:
+        st.dataframe(df, use_container_width=True)
+        return
+
+    # ===== DANH SÁCH MỤC =====
+    categories = df[category_col].dropna().unique()
+
+    selected_cat = st.selectbox(
+        "Chọn mục",
+        categories
+    )
+
+    cat_df = df[df[category_col] == selected_cat]
+
+    st.dataframe(cat_df, use_container_width=True)
 
     st.divider()
 
-    st.subheader("🤖 Hỏi AI theo cẩm nang")
+    # ===== AI HỎI THEO MỤC =====
+    st.subheader("🤖 Hỏi AI theo mục này")
 
     user_q = st.text_input("Nhập câu hỏi")
 
     if st.button("Hỏi"):
 
-        knowledge = df.to_string()
+        knowledge = cat_df.to_string()
 
         prompt = f"""
 Dữ liệu cẩm nang:
@@ -516,8 +537,6 @@ Trả lời chính xác theo dữ liệu.
         res = ask_chatgpt(prompt)
 
         st.success(res)
-
-
 # =====================================================
 # VISA AI
 # =====================================================
@@ -631,4 +650,5 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 

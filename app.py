@@ -302,19 +302,22 @@ def render_dashboard():
         df["Giá"] = pd.to_numeric(df["Giá"], errors="coerce").fillna(0)
 
     if "Ngày" in df.columns:
-        df["Ngày"] = pd.to_datetime(df["Ngày"], errors="coerce").dt.date
+        df["Ngày"] = pd.to_datetime(df["Ngày"], errors="coerce")
 
-    # ===== TODAY FILTER =====
-    today = datetime.now().date()
+    # ===== TODAY (GIỜ VIỆT NAM) =====
+    from datetime import datetime, timedelta
+
+    vietnam_now = datetime.utcnow() + timedelta(hours=7)
+    today = vietnam_now.date()
 
     if "Ngày" in df.columns:
-        today_df = df[df["Ngày"] == today]
+        today_df = df[df["Ngày"].dt.date == today]
     else:
         today_df = pd.DataFrame()
 
-    # ===== METRICS (nếu không có thì = 0) =====
-    today_customers = len(today_df) if not today_df.empty else 0
-    today_revenue = today_df["Giá"].sum() if not today_df.empty else 0
+    # ===== METRICS =====
+    today_customers = len(today_df)
+    today_revenue = today_df["Giá"].sum()
 
     total_customers = len(df)
     total_revenue = df["Giá"].sum()
@@ -325,6 +328,8 @@ def render_dashboard():
     col2.metric("Doanh thu hôm nay", f"{today_revenue:,.0f} đ")
     col3.metric("Tổng khách", total_customers)
     col4.metric("Tổng doanh thu", f"{total_revenue:,.0f} đ")
+
+    st.divider()
 
     # ===== DOANH THU THEO TOUR =====
     if "Tour" in df.columns:
@@ -345,17 +350,19 @@ def render_dashboard():
         st.plotly_chart(fig1, use_container_width=True)
 
     # ===== DOANH THU THEO NGÀY =====
-    daily = df.groupby("Ngày")["Giá"].sum().reset_index()
+    if "Ngày" in df.columns:
 
-    fig2 = px.line(
-        daily,
-        x="Ngày",
-        y="Giá",
-        markers=True,
-        title="Doanh thu theo ngày"
-    )
+        daily = df.groupby(df["Ngày"].dt.date)["Giá"].sum().reset_index()
 
-    st.plotly_chart(fig2, use_container_width=True)
+        fig2 = px.line(
+            daily,
+            x="Ngày",
+            y="Giá",
+            markers=True,
+            title="Doanh thu theo ngày"
+        )
+
+        st.plotly_chart(fig2, use_container_width=True)
 
 # =====================================================
 # SALES CENTER
@@ -823,6 +830,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

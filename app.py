@@ -452,39 +452,30 @@ Khách nói: {cust['msg']}
     # ================= RIGHT =================
     with col_right:
 
-    st.subheader("⚡ AI Tra cứu nội bộ")
+        # ===== AI TRA CỨU NỘI BỘ =====
+        st.subheader("⚡ AI Tra cứu nội bộ")
 
-    # Ô nhập câu hỏi
-    user_q = st.text_input("Hỏi dữ liệu công ty", key="internal_ai_input")
+        user_q = st.text_input("Hỏi dữ liệu công ty", key="internal_ai_input")
 
-    # Nút tra cứu
-    if st.button("Tra cứu nội bộ", key="internal_ai_btn"):
+        if st.button("Tra cứu nội bộ", key="internal_ai_btn"):
 
-        if user_q.strip() == "":
-            st.warning("Vui lòng nhập câu hỏi")
-        else:
-            res = ask_company_ai(user_q)
+            if user_q.strip() == "":
+                st.warning("Vui lòng nhập câu hỏi")
+            else:
+                res = ask_company_ai(user_q)
 
-            st.session_state.chat_history.append(("Bạn", user_q))
-            st.session_state.chat_history.append(("AI", res))
+                st.session_state.chat_history.append(("Bạn", user_q))
+                st.session_state.chat_history.append(("AI", res))
 
-    st.divider()
+        st.divider()
 
-    # ===== HIỂN THỊ LỊCH SỬ CHAT =====
-    st.subheader("💬 Lịch sử AI")
-
-    for role, msg in st.session_state.chat_history:
-        if role == "Bạn":
-            st.markdown(f"**🧑 {role}:** {msg}")
-        else:
-            st.markdown(f"**🤖 {role}:** {msg}")
         # ===== AI SO SÁNH TOUR =====
         st.subheader("📊 So sánh 2 tour")
 
-        tour1 = st.text_input("Tour 1")
-        tour2 = st.text_input("Tour 2")
+        tour1 = st.text_input("Tour 1", key="compare1")
+        tour2 = st.text_input("Tour 2", key="compare2")
 
-        if st.button("So sánh tour"):
+        if st.button("So sánh tour", key="compare_btn"):
 
             prompt = f"So sánh 2 tour {tour1} và {tour2} của công ty Vietravel."
 
@@ -493,12 +484,16 @@ Khách nói: {cust['msg']}
             st.session_state.chat_history.append(("Bạn", f"So sánh: {tour1} vs {tour2}"))
             st.session_state.chat_history.append(("AI", res))
 
-        # ===== CHAT HISTORY =====
+        st.divider()
+
+        # ===== LỊCH SỬ CHAT =====
         st.subheader("💬 Lịch sử AI")
 
         for role, msg in st.session_state.chat_history:
-            st.write(f"**{role}:** {msg}")
-
+            if role == "Bạn":
+                st.markdown(f"**🧑 {role}:** {msg}")
+            else:
+                st.markdown(f"**🤖 {role}:** {msg}")
 
 # =====================================================
 # CUSTOMERS & ORDERS
@@ -882,6 +877,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

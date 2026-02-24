@@ -339,6 +339,7 @@ def render_sales_center():
 
     col_left, col_mid, col_right = st.columns([1, 2, 1])
 
+    # ================= LEFT =================
     with col_left:
 
         st.subheader("Khách hàng")
@@ -347,6 +348,7 @@ def render_sales_center():
             if st.button(f"{cust['name']} - {cust['time']}", key=cust["id"]):
                 st.session_state.selected_customer = cust
 
+    # ================= MID =================
     with col_mid:
 
         cust = st.session_state.selected_customer
@@ -363,6 +365,7 @@ def render_sales_center():
             </div>
             """, unsafe_allow_html=True)
 
+            # ===== TOUR SUGGEST =====
             st.subheader("🎯 Tour phù hợp")
 
             suggest_df = suggest_tour(cust["msg"])
@@ -372,13 +375,27 @@ def render_sales_center():
             else:
                 st.dataframe(suggest_df)
 
-            st.subheader("🤖 AI gợi ý trả lời")
+            # ===== AI REPLY =====
+            st.subheader("🤖 AI gợi ý trả lời (theo dữ liệu công ty)")
 
             if st.button("Gợi ý trả lời khách"):
                 prompt = f"Khách nói: {cust['msg']}. Hãy trả lời tư vấn tour chuyên nghiệp."
-                reply = ask_chatgpt(prompt)
+                reply = ask_company_ai(prompt)
                 st.success(reply)
 
+            # ===== AI OBJECTION =====
+            st.subheader("🧠 Xử lý từ chối")
+
+            if st.button("Gợi ý xử lý từ chối"):
+                prompt = f"""
+Khách nói: {cust['msg']}
+
+Đưa ra 3 cách xử lý chuyên nghiệp để thuyết phục khách.
+"""
+                reply = ask_chatgpt(prompt)
+                st.info(reply)
+
+            # ===== STATUS =====
             status = st.selectbox(
                 "Trạng thái",
                 ["Đang theo dõi", "Đã chốt đơn", "Không chốt"]
@@ -416,18 +433,38 @@ def render_sales_center():
                         if saved:
                             st.success("✅ Đã lưu Google Sheet")
 
+    # ================= RIGHT =================
     with col_right:
 
-        st.subheader("AI Hỏi Tour")
+        # ===== AI TRA CỨU NỘI BỘ =====
+        st.subheader("⚡ AI Tra cứu nội bộ")
 
-        user_q = st.text_input("Hỏi AI")
+        user_q = st.text_input("Hỏi dữ liệu công ty")
 
-        if st.button("Gửi"):
+        if st.button("Tra cứu"):
 
-            res = ask_chatgpt(user_q)
+            res = ask_company_ai(user_q)
 
             st.session_state.chat_history.append(("Bạn", user_q))
             st.session_state.chat_history.append(("AI", res))
+
+        # ===== AI SO SÁNH TOUR =====
+        st.subheader("📊 So sánh 2 tour")
+
+        tour1 = st.text_input("Tour 1")
+        tour2 = st.text_input("Tour 2")
+
+        if st.button("So sánh tour"):
+
+            prompt = f"So sánh 2 tour {tour1} và {tour2} của công ty Vietravel."
+
+            res = ask_company_ai(prompt)
+
+            st.session_state.chat_history.append(("Bạn", f"So sánh: {tour1} vs {tour2}"))
+            st.session_state.chat_history.append(("AI", res))
+
+        # ===== CHAT HISTORY =====
+        st.subheader("💬 Lịch sử AI")
 
         for role, msg in st.session_state.chat_history:
             st.write(f"**{role}:** {msg}")
@@ -630,7 +667,45 @@ Tư vấn visa chi tiết.
         result = ask_chatgpt(prompt)
         st.write(result)
 
+# =====================================================
+# COMPANY AI KNOWLEDGE BASE
+# =====================================================
 
+def load_company_knowledge():
+
+    text = ""
+
+    # Visa docs
+    text += visa_knowledge + "\n"
+
+    # Tour sheet
+    try:
+        df = load_tour_sheet()
+        if not df.empty:
+            text += df.to_string()
+    except:
+        pass
+
+    return text
+
+
+def ask_company_ai(question):
+
+    knowledge = load_company_knowledge()
+
+    prompt = f"""
+Bạn là chuyên gia sản phẩm Vietravel.
+
+Dữ liệu nội bộ công ty:
+{knowledge}
+
+Câu hỏi:
+{question}
+
+Trả lời chính xác theo dữ liệu công ty.
+"""
+
+    return ask_chatgpt(prompt)
 # =====================================================
 # SETTINGS
 # =====================================================

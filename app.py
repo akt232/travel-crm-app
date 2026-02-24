@@ -494,48 +494,53 @@ def render_customer_orders():
 # GUIDE CENTER
 # =====================================================
 
+# =====================================================
+# GUIDE CENTER
+# =====================================================
+
 def render_guide_center():
+
     st.title("📘 Cẩm nang")
 
-    # Lấy danh sách tên các Tab
-    sheet_names = get_guide_worksheets()
-    
-    if not sheet_names:
-        st.warning("Không tìm thấy dữ liệu Sheet.")
-        return
-
-    # Ô chọn Tab (Mục lớn)
-    selected_sheet = st.selectbox("Chọn mục cẩm nang (Tab)", sheet_names)
-
-    # Load dữ liệu của Tab đã chọn
-    df = load_guide_sheet(selected_sheet)
+    df = load_guide_sheet()
 
     if df.empty:
-        st.info("Mục này chưa có nội dung.")
+        st.warning("Không có dữ liệu.")
         return
 
-    # Logic lọc theo cột (Category) nếu có
-    possible_cols = ["Mục", "Category", "Danh mục", "Loại", "Chủ đề"]
-    category_col = next((col for col in possible_cols if col in df.columns), None)
+    # Giả sử cột đầu tiên chứa tiêu đề mục
+    first_col = df.columns[0]
 
-    if category_col:
-        categories = ["Tất cả"] + list(df[category_col].dropna().unique())
-        selected_cat = st.selectbox(f"Lọc theo {category_col}", categories)
-        display_df = df if selected_cat == "Tất cả" else df[df[category_col] == selected_cat]
-    else:
-        display_df = df
+    # Lấy danh sách mục lớn (dòng chữ bự)
+    sections = df[first_col].dropna().unique().tolist()
 
-    st.dataframe(display_df, use_container_width=True)
+    if not sections:
+        st.warning("Không tìm thấy mục.")
+        return
+
+    st.subheader("Chọn mục")
+
+    cols = st.columns(3)
+
+    for i, sec in enumerate(sections):
+        with cols[i % 3]:
+            if st.button(sec, use_container_width=True):
+                st.session_state["guide_section"] = sec
+
+    # mặc định
+    if "guide_section" not in st.session_state:
+        st.session_state["guide_section"] = sections[0]
+
+    selected = st.session_state["guide_section"]
 
     st.divider()
 
-    st.subheader(f"🤖 Hỏi AI về {selected_sheet}")
-    user_q = st.text_input("Nhập câu hỏi")
+    st.subheader(f"📄 Nội dung: {selected}")
 
-    if st.button("Hỏi"):
-        knowledge = display_df.to_string()
-        prompt = f"Dữ liệu cẩm nang mục {selected_sheet}:\n{knowledge}\n\nCâu hỏi: {user_q}\n\nTrả lời chính xác."
-        st.success(ask_chatgpt(prompt))
+    # Lọc dữ liệu theo mục
+    filtered_df = df[df[first_col] == selected]
+
+    st.dataframe(filtered_df, use_container_width=True)
 # =====================================================
 # VISA AI
 # =====================================================
@@ -655,6 +660,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

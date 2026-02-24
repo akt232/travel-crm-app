@@ -639,9 +639,13 @@ def render_settings():
 
     st.title("Settings")
 
-    key = st.text_input("OpenAI API Key", value=st.session_state.api_key)
+    key = st.text_input(
+        "OpenAI API Key",
+        value=st.session_state.api_key,
+        type="password"
+    )
 
-     if st.button("Save API"):
+    if st.button("Save API"):
 
         st.session_state.api_key = key
 
@@ -653,6 +657,7 @@ def render_settings():
         })
 
         st.success("Saved permanently ✅")
+
     st.divider()
 
     sheet_link = st.text_input(
@@ -679,11 +684,11 @@ def render_settings():
         save_config({
             "sheet_url": sheet_link,
             "tour_sheet_url": tour_link,
-            "guide_sheet_url": guide_link
+            "guide_sheet_url": guide_link,
+            "api_key": st.session_state.api_key
         })
 
         st.success("Đã lưu vĩnh viễn")
-
 # =====================================================
 # SIDEBAR
 # =====================================================
@@ -717,6 +722,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

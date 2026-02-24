@@ -41,10 +41,11 @@ def load_config():
             return json.load(f)
 
     return {
-    "sheet_url": DEFAULT_SHEET,
-    "tour_sheet_url": DEFAULT_TOUR_SHEET,
-    "guide_sheet_url": DEFAULT_GUIDE_SHEET
-}
+        "sheet_url": DEFAULT_SHEET,
+        "tour_sheet_url": DEFAULT_TOUR_SHEET,
+        "guide_sheet_url": DEFAULT_GUIDE_SHEET,
+        "api_key": ""
+    }
 
 
 def save_config(data):
@@ -60,7 +61,7 @@ config = load_config()
 # =====================================================
 
 if "api_key" not in st.session_state:
-    st.session_state.api_key = ""
+    st.session_state.api_key = config.get("api_key", "")
 
 if "sheet_url" not in st.session_state:
     st.session_state.sheet_url = config.get("sheet_url", "")
@@ -640,10 +641,18 @@ def render_settings():
 
     key = st.text_input("OpenAI API Key", value=st.session_state.api_key)
 
-    if st.button("Save API"):
-        st.session_state.api_key = key
-        st.success("Saved")
+   if st.button("Save API"):
 
+    st.session_state.api_key = key
+
+    save_config({
+        "sheet_url": st.session_state.sheet_url,
+        "tour_sheet_url": st.session_state.tour_sheet_url,
+        "guide_sheet_url": st.session_state.guide_sheet_url,
+        "api_key": key
+    })
+
+    st.success("Saved permanently ✅")
     st.divider()
 
     sheet_link = st.text_input(
@@ -708,6 +717,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

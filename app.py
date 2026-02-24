@@ -531,30 +531,30 @@ def render_guide_center():
         ],
 
         "THÔNG TIN CHUNG": [
-            ("Danh sách đăng ký hoàn tiền cho khách", "https://docs.google.com"),
-            ("Thông tin họp đoàn mẫu", "https://docs.google.com"),
-            ("Tạo QR code", "https://docs.google.com"),
-            ("Tổng hợp các chương trình ưu đãi tài chính", "https://docs.google.com"),
-            ("Video Sản Phẩm của BSP", "https://docs.google.com"),
-            ("Chi tiết mức chi Hoa Hồng", "https://docs.google.com"),
-            ("Khuyến mãi Xuân 2026", "https://docs.google.com"),
-            ("Tổng hợp quy trình Trung tâm FIT", "https://docs.google.com"),
-            ("TTX take note nhắc nhở", "https://docs.google.com"),
+            ("Danh sách đăng ký hoàn tiền cho khách", "https://docs.google.com/spreadsheets/d/1p3ugCM9ZkQqZad9tNAyfXkSvMWKSN1AI/edit"),
+            ("Thông tin họp đoàn mẫu", "https://drive.google.com/drive/folders/1aodfsPrA6ey0yeCe_byLAxINtzYOBP1t"),
+            ("Tạo QR code", "https://docs.google.com/spreadsheets/u/0/d/1u0U_cEHTM1doUihaRXsH8bVtyIaDNgzF/edit"),
+            ("Tổng hợp các chương trình ưu đãi tài chính", "https://docs.google.com/spreadsheets/d/12-X-UHL2SeyHgWbGeRxZHrIrsdNPDKom/edit?gid=11240248#gid=11240248"),
+            ("Video Sản Phẩm của BSP", "https://drive.google.com/drive/folders/1ssuW6KhIgfDhlNsf8-2Xjxxp8sD8gfQN"),
+            ("Chi tiết mức chi Hoa Hồng", "https://docs.google.com/spreadsheets/d/1vxIyiM04-7HM7l5Tg_jtWQnhlrpYw74N/edit?gid=1266470926#gid=1266470926"),
+            ("Khuyến mãi Xuân 2026", "https://docs.google.com/spreadsheets/d/1hgMkuFrWoktsKKn-dma23pq0tIS6v2BJyL5yTO0IWu8/edit?gid=0#gid=0"),
+            ("Tổng hợp quy trình Trung tâm FIT", "https://docs.google.com/spreadsheets/d/1zbF49Pa1Eq7dX1X7iop-lfvi32Wk_rMeLSvgc2DWEn8/edit?gid=0#gid=0"),
+            ("TTX take note nhắc nhở", "https://docs.google.com/spreadsheets/d/1UrlqAxcXZBbfLTBZoFcB4pFNXhPRv3mrpjerS2J1IZg/edit?gid=0#gid=0"),
         ],
 
         "CẨM NANG TƯ VẤN DV SP BÁN": [
-            ("Thông tin tour Châu Âu", "https://docs.google.com"),
-            ("Thông tin tour Châu Mỹ", "https://docs.google.com"),
-            ("Thông tin tour Châu Úc", "https://docs.google.com"),
-            ("Thông tin tour Nhật Bản", "https://docs.google.com"),
-            ("Thông tin tour Hàn Quốc", "https://docs.google.com"),
-            ("Thông tin tour Thái Lan", "https://docs.google.com"),
-            ("Thông tin tour Tiếng Hoa", "https://docs.google.com"),
-            ("Thông tin tour Đông Nam Á (trừ Thái Lan)", "https://docs.google.com"),
-            ("Thông tin tour Miền Bắc", "https://docs.google.com"),
-            ("Thông tin tour Miền Trung", "https://docs.google.com"),
-            ("Thông tin tour Miền Nam", "https://docs.google.com"),
-            ("Đào tạo nội bộ FIT - Google Drive", "https://docs.google.com"),
+            ("Thông tin tour Châu Âu", "https://docs.google.com/spreadsheets/d/1ELv_B6EuRLO9But48qlYFQ_RPuftsHTw/edit?gid=1277256155#gid=1277256155"),
+            ("Thông tin tour Châu Mỹ", "https://docs.google.com/spreadsheets/d/1AcEYg9sVKYPbz__MCrLdflHUr1ExG3SmAP1ioo_RnHU/edit?gid=0#gid=0"),
+            ("Thông tin tour Châu Úc", "https://docs.google.com/spreadsheets/d/1-U4XjUw44buIgXye4MGh4Oqdsars64hZ/edit?gid=1277256155#gid=1277256155"),
+            ("Thông tin tour Nhật Bản", "https://docs.google.com/spreadsheets/d/17qLBrdl6Wrz5MfDeCzR31QAEjciuQhgP/edit?gid=566600147#gid=566600147"),
+            ("Thông tin tour Hàn Quốc", "https://docs.google.com/spreadsheets/d/1pWJ4igSPzsG7kSGpUiadTODCFnP1jsi5XRXD17ZkSc0/edit?gid=1413342922#gid=1413342922"),
+            ("Thông tin tour Thái Lan", "https://docs.google.com/spreadsheets/d/1rDKIPnDIsgaNxWmCI3rGtJDCGiysRybzh7xrIO3t6js/edit?gid=0#gid=0"),
+            ("Thông tin tour Tiếng Hoa", "https://drive.google.com/drive/folders/1x6UAxej421ujrStmAi3t40nwKKo9BGaE?usp=drive_link"),
+            ("Thông tin tour Đông Nam Á (trừ Thái Lan)", "https://docs.google.com/spreadsheets/d/1lPTTo-Scd2BNPImpSvmtUrO5GQPH5ijq/edit?gid=124368584#gid=124368584"),
+            ("Thông tin tour Miền Bắc", "https://docs.google.com/spreadsheets/d/1PlLTLEgZCg6QKYLFY5-vs_65ZtgzP56ts03Orw_Cx7Y/edit?gid=0#gid=0"),
+            ("Thông tin tour Miền Trung", "https://docs.google.com/spreadsheets/d/1GaUlMYm3f_col5wQ_kaV2n9X0zqXiyKsK2O74Rn84Bo/edit?gid=1461750039#gid=1461750039"),
+            ("Thông tin tour Miền Nam", "https://docs.google.com/spreadsheets/d/1L446JdJtmcaFZRS0kpMvlAq7P4aJNWZwFDUUFJJpEUE/edit?gid=0#gid=0"),
+            ("Đào tạo nội bộ FIT - Google Drive", "https://drive.google.com/drive/folders/1jzs5xZfKJZGX_6pibuz2JiaL9eTeiB7g"),
         ],
     }
 
@@ -711,6 +711,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

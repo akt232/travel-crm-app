@@ -137,16 +137,19 @@ def connect_sheet(url):
         "https://www.googleapis.com/auth/drive"
     ]
 
-    creds = ServiceAccountCredentials.from_json_keyfile_name(
-        "credentials.json", scope)
+    # Lấy credentials từ Streamlit Secrets
+    creds_dict = st.secrets["gcp_service_account"]
+
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(
+        creds_dict,
+        scope
+    )
 
     client = gspread.authorize(creds)
 
     sheet = client.open_by_url(url).sheet1
 
     return sheet
-
-
 def load_sheet():
     try:
         sheet = connect_sheet(st.session_state.sheet_url)

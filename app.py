@@ -169,15 +169,32 @@ def load_tour_sheet():
         return pd.DataFrame()
 
 
-def load_guide_sheet():
+def load_guide_sheet(worksheet_name=None):
     try:
-        sheet = connect_sheet(st.session_state.guide_sheet_url)
+        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+        creds_dict = st.secrets["gcp_service_account"]
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+        client = gspread.authorize(creds)
+        spreadsheet = client.open_by_url(st.session_state.guide_sheet_url)
+        
+        # Nếu có tên worksheet thì mở, không thì mở sheet đầu tiên
+        sheet = spreadsheet.worksheet(worksheet_name) if worksheet_name else spreadsheet.sheet1
+        
         data = sheet.get_all_records()
         return pd.DataFrame(data)
-    except:
+    except Exception as e:
+        st.error(f"Lỗi: {e}")
         return pd.DataFrame()
-
-
+def get_guide_worksheets():
+    try:
+        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+        creds_dict = st.secrets["gcp_service_account"]
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+        client = gspread.authorize(creds)
+        spreadsheet = client.open_by_url(st.session_state.guide_sheet_url)
+        return [sh.title for sh in spreadsheet.worksheets()]
+    except:
+        return []
 def save_to_sheet(row):
     try:
         sheet = connect_sheet(st.session_state.sheet_url)
@@ -478,66 +495,47 @@ def render_customer_orders():
 # =====================================================
 
 def render_guide_center():
-
     st.title("📘 Cẩm nang")
 
-    df = load_guide_sheet()
+    # Lấy danh sách tên các Tab
+    sheet_names = get_guide_worksheets()
+    
+    if not sheet_names:
+        st.warning("Không tìm thấy dữ liệu Sheet.")
+        return
+
+    # Ô chọn Tab (Mục lớn)
+    selected_sheet = st.selectbox("Chọn mục cẩm nang (Tab)", sheet_names)
+
+    # Load dữ liệu của Tab đã chọn
+    df = load_guide_sheet(selected_sheet)
 
     if df.empty:
-        st.warning("Không có dữ liệu")
+        st.info("Mục này chưa có nội dung.")
         return
 
-    # ===== XÁC ĐỊNH CỘT MỤC =====
-    possible_cols = ["Mục", "Category", "Danh mục", "Loai"]
+    # Logic lọc theo cột (Category) nếu có
+    possible_cols = ["Mục", "Category", "Danh mục", "Loại", "Chủ đề"]
+    category_col = next((col for col in possible_cols if col in df.columns), None)
 
-    category_col = None
+    if category_col:
+        categories = ["Tất cả"] + list(df[category_col].dropna().unique())
+        selected_cat = st.selectbox(f"Lọc theo {category_col}", categories)
+        display_df = df if selected_cat == "Tất cả" else df[df[category_col] == selected_cat]
+    else:
+        display_df = df
 
-    for col in possible_cols:
-        if col in df.columns:
-            category_col = col
-            break
-
-    # Nếu không có cột mục thì hiển thị thẳng
-    if not category_col:
-        st.dataframe(df, use_container_width=True)
-        return
-
-    # ===== DANH SÁCH MỤC =====
-    categories = df[category_col].dropna().unique()
-
-    selected_cat = st.selectbox(
-        "Chọn mục",
-        categories
-    )
-
-    cat_df = df[df[category_col] == selected_cat]
-
-    st.dataframe(cat_df, use_container_width=True)
+    st.dataframe(display_df, use_container_width=True)
 
     st.divider()
 
-    # ===== AI HỎI THEO MỤC =====
-    st.subheader("🤖 Hỏi AI theo mục này")
-
+    st.subheader(f"🤖 Hỏi AI về {selected_sheet}")
     user_q = st.text_input("Nhập câu hỏi")
 
     if st.button("Hỏi"):
-
-        knowledge = cat_df.to_string()
-
-        prompt = f"""
-Dữ liệu cẩm nang:
-{knowledge}
-
-Câu hỏi:
-{user_q}
-
-Trả lời chính xác theo dữ liệu.
-"""
-
-        res = ask_chatgpt(prompt)
-
-        st.success(res)
+        knowledge = display_df.to_string()
+        prompt = f"Dữ liệu cẩm nang mục {selected_sheet}:\n{knowledge}\n\nCâu hỏi: {user_q}\n\nTrả lời chính xác."
+        st.success(ask_chatgpt(prompt))
 # =====================================================
 # VISA AI
 # =====================================================
@@ -657,6 +655,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

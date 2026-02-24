@@ -296,25 +296,35 @@ def render_dashboard():
         df["Giá"] = (
             df["Giá"]
             .astype(str)
-            .str.replace(",", "")
-            .str.replace("đ", "")
+            .str.replace(",", "", regex=False)
+            .str.replace("đ", "", regex=False)
         )
         df["Giá"] = pd.to_numeric(df["Giá"], errors="coerce").fillna(0)
 
     if "Ngày" in df.columns:
-        df["Ngày"] = pd.to_datetime(df["Ngày"], errors="coerce")
+        df["Ngày"] = pd.to_datetime(df["Ngày"], errors="coerce").dt.date
 
+    # ===== TODAY FILTER =====
     today = datetime.now().date()
-    today_df = df[df["Ngày"].dt.date == today]
+
+    if "Ngày" in df.columns:
+        today_df = df[df["Ngày"] == today]
+    else:
+        today_df = pd.DataFrame()
+
+    # ===== METRICS (nếu không có thì = 0) =====
+    today_customers = len(today_df) if not today_df.empty else 0
+    today_revenue = today_df["Giá"].sum() if not today_df.empty else 0
+
+    total_customers = len(df)
+    total_revenue = df["Giá"].sum()
 
     col1, col2, col3, col4 = st.columns(4)
 
-    col1.metric("Khách hôm nay", len(today_df))
-    col2.metric("Doanh thu hôm nay", f"{today_df['Giá'].sum():,.0f} đ")
-    col3.metric("Tổng khách", len(df))
-    col4.metric("Tổng doanh thu", f"{df['Giá'].sum():,.0f} đ")
-
-    st.divider()
+    col1.metric("Khách hôm nay", today_customers)
+    col2.metric("Doanh thu hôm nay", f"{today_revenue:,.0f} đ")
+    col3.metric("Tổng khách", total_customers)
+    col4.metric("Tổng doanh thu", f"{total_revenue:,.0f} đ")
 
     # ===== DOANH THU THEO TOUR =====
     if "Tour" in df.columns:
@@ -813,6 +823,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

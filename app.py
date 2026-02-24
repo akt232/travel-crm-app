@@ -236,10 +236,6 @@ def suggest_tour(message):
 
     msg = message.lower()
 
-    # =========================
-    # STOP WORDS (từ rác)
-    # =========================
-
     STOP_WORDS = [
         "anh", "chị", "em", "mình", "tôi",
         "muốn", "đi", "du", "lịch", "tour",
@@ -262,25 +258,23 @@ def suggest_tour(message):
 
     for _, row in df.iterrows():
 
-        text = " ".join([str(v) for v in row.values]).lower()
+        # CHỈ LẤY TÊN TOUR ĐỂ SO SÁNH
+        tour_name = str(row.get("Tour (Tên tour)", "")).lower()
 
-        score = 0
+        matched = False
 
         for kw in keywords:
-            if kw in text:
-                score += 1
+            if kw in tour_name:
+                matched = True
+                break
 
-        if score > 0:
-            r = row.copy()
-            r["score"] = score
-            results.append(r)
+        if matched:
+            results.append(row)
 
     if not results:
         return pd.DataFrame()
 
-    result_df = pd.DataFrame(results)
-
-    return result_df.sort_values("score", ascending=False).drop(columns=["score"])
+    return pd.DataFrame(results)
 
 
 # =====================================================
@@ -819,6 +813,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

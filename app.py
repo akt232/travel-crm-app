@@ -234,31 +234,23 @@ def suggest_tour(message):
     if df.empty:
         return pd.DataFrame()
 
-    keywords = clean_words(message)
+    msg = message.lower()
 
     results = []
 
     for _, row in df.iterrows():
 
-        text = " ".join([str(row).lower()])
+        # gộp toàn bộ nội dung tour thành text
+        text = " ".join([str(v) for v in row.values]).lower()
 
-        score = 0
-
-        for kw in keywords:
-            if kw in text:
-                score += 1
-
-        if score > 0:
-            r = row.copy()
-            r["Score"] = score
-            results.append(r)
+        # nếu tên quốc gia / thành phố xuất hiện trong tin nhắn
+        if any(word in text for word in msg.split()):
+            results.append(row)
 
     if not results:
         return pd.DataFrame()
 
-    result_df = pd.DataFrame(results)
-
-    return result_df.sort_values("Score", ascending=False).drop(columns=["Score"])
+    return pd.DataFrame(results)
 
 
 # =====================================================
@@ -797,6 +789,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

@@ -34,7 +34,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.image("assets/logo.webp", width=180)
+st.image("logo.png", width=180)
 # =====================================================
 # LOAD CONFIG
 # =====================================================
@@ -1259,6 +1259,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

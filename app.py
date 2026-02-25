@@ -721,6 +721,11 @@ def render_sales_center():
             if st.button(f"{cust['name']} - {cust['time']}", key=cust["id"]):
                 st.session_state.selected_customer = cust
 
+                # reset chat khi chọn khách
+                st.session_state.chat_messages = [
+                    {"role": "customer", "content": cust["msg"]}
+                ]
+
     # ================= MID =================
     with col_mid:
 
@@ -730,13 +735,49 @@ def render_sales_center():
 
             st.subheader(f"Chat với {cust['name']}")
 
-            st.markdown(f"""
-            <div class="chat-box">
-                <div class="chat-area">
-                    <div class="msg">{cust["msg"]}</div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            # ===== INIT CHAT STATE =====
+            if "chat_messages" not in st.session_state:
+                st.session_state.chat_messages = [
+                    {"role": "customer", "content": cust["msg"]}
+                ]
+
+            # ===== CHAT BOX =====
+            chat_html = '<div class="chat-box"><div class="chat-area">'
+
+            for msg in st.session_state.chat_messages:
+
+                if msg["role"] == "customer":
+                    chat_html += f'<div class="msg">👤 {msg["content"]}</div>'
+                else:
+                    chat_html += f'<div class="msg">🧑‍💼 {msg["content"]}</div>'
+
+            chat_html += "</div></div>"
+
+            st.markdown(chat_html, unsafe_allow_html=True)
+
+            # ===== INPUT CHAT =====
+            col_input, col_send = st.columns([4, 1])
+
+            with col_input:
+                user_input = st.text_input(
+                    "Nhập tin nhắn",
+                    key="chat_input",
+                    label_visibility="collapsed",
+                    placeholder="Nhắn trả lời khách..."
+                )
+
+            with col_send:
+                if st.button("Gửi", use_container_width=True):
+
+                    if user_input:
+
+                        st.session_state.chat_messages.append(
+                            {"role": "sale", "content": user_input}
+                        )
+
+                        st.rerun()
+
+            st.divider()
 
             # ===== TOUR SUGGEST =====
             st.subheader("🎯 Tour phù hợp")
@@ -746,26 +787,34 @@ def render_sales_center():
             if suggest_df.empty:
                 st.info("Không tìm thấy tour")
             else:
-                st.dataframe(suggest_df)
+                st.dataframe(suggest_df, use_container_width=True)
 
             # ===== AI REPLY =====
-            st.subheader("🤖 AI gợi ý trả lời (theo dữ liệu công ty)")
+            st.subheader("🤖 AI gợi ý trả lời")
 
             if st.button("Gợi ý trả lời khách"):
+
                 prompt = f"Khách nói: {cust['msg']}. Hãy trả lời tư vấn tour chuyên nghiệp."
+
                 reply = ask_company_ai(prompt)
-                st.success(reply)
+
+                st.session_state.chat_messages.append(
+                    {"role": "sale", "content": reply}
+                )
+
+                st.rerun()
 
             # ===== AI OBJECTION =====
             st.subheader("🧠 Xử lý từ chối")
 
             if st.button("Gợi ý xử lý từ chối"):
+
                 prompt = f"""
 Khách nói: {cust['msg']}
-
 Đưa ra 3 cách xử lý chuyên nghiệp để thuyết phục khách.
 """
                 reply = ask_chatgpt(prompt)
+
                 st.info(reply)
 
             # ===== STATUS =====
@@ -809,7 +858,6 @@ Khách nói: {cust['msg']}
     # ================= RIGHT =================
     with col_right:
 
-        # ===== AI TRA CỨU NỘI BỘ =====
         st.subheader("⚡ AI Tra cứu nội bộ")
 
         user_q = st.text_input("Hỏi dữ liệu công ty")
@@ -821,7 +869,6 @@ Khách nói: {cust['msg']}
             st.session_state.chat_history.append(("Bạn", user_q))
             st.session_state.chat_history.append(("AI", res))
 
-        # ===== AI SO SÁNH TOUR =====
         st.subheader("📊 So sánh 2 tour")
 
         tour1 = st.text_input("Tour 1")
@@ -836,11 +883,8 @@ Khách nói: {cust['msg']}
             st.session_state.chat_history.append(("Bạn", f"So sánh: {tour1} vs {tour2}"))
             st.session_state.chat_history.append(("AI", res))
 
-        # =============================
-        # AI TRA TOUR DRIVE (NEW)
-        # =============================
-
         st.divider()
+
         st.subheader("📂 AI Tra cứu Tour (Drive)")
 
         drive_query = st.text_input(
@@ -866,15 +910,12 @@ Khách nói: {cust['msg']}
                     height=300
                 )
 
-                # COPY BOX
                 st.code(result, language="text")
 
-        # ===== CHAT HISTORY =====
         st.subheader("💬 Lịch sử AI")
 
         for role, msg in st.session_state.chat_history:
             st.write(f"**{role}:** {msg}")
-
 # =====================================================
 # CUSTOMERS & ORDERS
 # =====================================================
@@ -1218,6 +1259,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

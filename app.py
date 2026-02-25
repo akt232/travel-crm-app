@@ -357,7 +357,7 @@ def load_drive_tour_data():
 # =============================
 # AI SEARCH TOUR FROM DRIVE DATA
 # =============================
-def search_relevant_text(data, query, window=1500):
+def search_relevant_text(data, query, window=4000):
 
     query = query.lower()
 
@@ -382,12 +382,17 @@ def ai_search_tour_drive(query):
     prompt = f"""
 Bạn là chuyên gia tư vấn tour Vietravel.
 
-QUY TẮC QUAN TRỌNG:
+NHIỆM VỤ:
+Trích xuất đầy đủ thông tin tour từ dữ liệu và viết lại cho khách.
 
-1. Chỉ được dùng thông tin có trong dữ liệu
-2. Không được tự suy đoán hoặc thêm giá
-3. Nếu không có thông tin → ghi "Chưa có"
-4. Viết nội dung chuyên nghiệp gửi khách
+QUY TẮC BẮT BUỘC:
+
+- Không được tự thêm thông tin ngoài dữ liệu
+- Phải viết ĐẦY ĐỦ nhất có thể
+- Nếu thiếu thì ghi: Đang cập nhật
+- Lịch trình phải liệt kê theo Ngày 1, Ngày 2...
+- Không viết quá ngắn
+- Không được tóm tắt mất thông tin quan trọng
 
 DỮ LIỆU TOUR:
 {relevant}
@@ -395,15 +400,17 @@ DỮ LIỆU TOUR:
 KHÁCH HỎI:
 {query}
 
-Xuất theo format:
+Hãy viết nội dung gửi khách chuyên nghiệp gồm:
 
-Tên tour:
-Code tour:
-Giá:
-Thời gian:
-Ngày khởi hành:
-Điểm nổi bật:
-Lịch trình tóm tắt:
+📍 Tên tour  
+📍 Mã tour  
+📍 Thời gian  
+📍 Giá  
+📍 Ngày khởi hành  
+📍 Điểm nổi bật  
+📍 Lịch trình chi tiết từng ngày  
+
+Viết rõ ràng dễ copy gửi Zalo.
 """
 
     return ask_chatgpt(prompt)

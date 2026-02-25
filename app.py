@@ -98,14 +98,60 @@ if "customer_list" not in st.session_state:
 
 st.markdown("""
 <style>
-.stApp {background:#0f172a;color:#e2e8f0;}
-.stButton>button {background:#1d4ed8;color:white;border-radius:6px;border:none;height:40px;}
-.chat-box {background:#020617;border:1px solid #1e293b;border-radius:10px;height:60vh;display:flex;flex-direction:column;}
-.chat-area {flex-grow:1;overflow-y:auto;padding:15px;}
-.msg {background:#334155;padding:10px;border-radius:8px;margin-bottom:10px;}
+
+/* ===== NỀN TỔNG ===== */
+html, body, [class*="css"]  {
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff) !important;
+    color: #0f172a !important;
+}
+
+/* Main app */
+.stApp {
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff) !important;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background: #dbeafe !important;
+}
+
+/* Button */
+.stButton>button {
+    background: #2563eb !important;
+    color: white !important;
+    border-radius: 8px;
+    border: none;
+    height: 40px;
+    font-weight: 600;
+}
+
+/* Input box */
+.stTextInput input {
+    background: white !important;
+    color: black !important;
+}
+
+/* Chat box */
+.chat-box {
+    background: white !important;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Message */
+.msg {
+    background: #e0f2fe;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: #0f172a;
+}
+
 </style>
 """, unsafe_allow_html=True)
-
 
 # =====================================================
 # CHATGPT FUNCTION
@@ -1126,6 +1172,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

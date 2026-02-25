@@ -95,67 +95,46 @@ if "customer_list" not in st.session_state:
 # =====================================================
 # CSS
 # =====================================================
+st.markdown('<div class="dashboard-box">', unsafe_allow_html=True)
 
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.metric("Khách hôm nay", khach_hom_nay)
+
+with col2:
+    st.metric("Doanh thu hôm nay", doanh_thu_hom_nay)
+
+with col3:
+    st.metric("Tổng khách", tong_khach)
+
+with col4:
+    st.metric("Tổng doanh thu", tong_doanh_thu)
+
+st.markdown('</div>', unsafe_allow_html=True)
 st.markdown("""
 <style>
 
-/* ===== Background tổng ===== */
-.stApp {
-    background: linear-gradient(135deg, #eaf3ff, #d8e9ff);
+/* ===== Dashboard Box ===== */
+.dashboard-box {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    margin-bottom: 25px;
 }
 
-/* ===== Card / container ===== */
-.block-container {
-    background: transparent;
-}
-
-/* ===== Input text ===== */
-.stTextInput input {
-    background-color: #ffffff !important;
-    color: #111111 !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 8px !important;
-}
-
-/* ===== Selectbox ===== */
-.stSelectbox div[data-baseweb="select"] > div {
-    background-color: #ffffff !important;
-    color: #111111 !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 8px !important;
-}
-
-/* ===== Dropdown menu ===== */
-div[role="listbox"] {
-    background-color: #ffffff !important;
-    color: #111111 !important;
-}
-
-/* ===== File box / expander / custom box ===== */
-.stExpander, .stFileUploader, .stTextArea textarea {
-    background-color: #ffffff !important;
-    color: #111111 !important;
-    border-radius: 10px !important;
-}
-
-/* ===== Button ===== */
-.stButton button {
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
-    color: white;
-    border-radius: 8px;
-    border: none;
+/* chữ metric sáng lên */
+.dashboard-box label,
+.dashboard-box [data-testid="stMetricLabel"] {
+    color: #cbd5e1 !important;
     font-weight: 600;
 }
 
-/* ===== Label ===== */
-label {
-    color: #0f172a !important;
-    font-weight: 600;
-}
-
-/* ===== Header ===== */
-h1, h2, h3, h4 {
-    color: #0f172a !important;
+.dashboard-box [data-testid="stMetricValue"] {
+    color: #f8fafc !important;
+    font-size: 28px;
+    font-weight: 700;
 }
 
 </style>
@@ -1179,6 +1158,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

@@ -97,102 +97,119 @@ if "customer_list" not in st.session_state:
 # =====================================================
 st.markdown("""
 <style>
-    /* NỀN CHÍNH */
+    /* 1. Tổng thể nền & Font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    
     html, body, [data-testid="stAppViewContainer"] {
-        background-color: #f0f7ff !important;
+        background-color: #f4f7fa !important;
+        font-family: 'Inter', sans-serif;
     }
 
-    /* SIDEBAR XANH */
+    /* 2. Sidebar hiện đại */
     [data-testid="stSidebar"] {
-        background-color: #1e40af !important;
+        background-color: #003366 !important; /* Xanh Navy đặc trưng du lịch */
+        border-right: 1px solid #e0e0e0;
     }
     [data-testid="stSidebar"] * {
-        color: white !important;
+        color: #ffffff !important;
+    }
+    /* Màu khi di chuột qua menu sidebar */
+    [data-testid="stSidebarNav"] li:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
     }
 
-    /* TIÊU ĐỀ & CHỮ */
-    h1, h2, h3, h4, h5, h6, p, label {
-        color: #1e3a8a !important;
+    /* 3. Header & Text */
+    h1, h2, h3 {
+        color: #003366 !important;
+        font-weight: 700 !important;
+    }
+    p, label, span {
+        color: #334155 !important;
     }
 
-    /* NÚT BẤM (BUTTON) */
+    /* 4. Nút bấm (Buttons) chuẩn CRM */
     div.stButton > button {
-        background-color: #2563eb !important;
+        background: linear-gradient(135deg, #0056b3 0%, #003366 100%) !important;
         color: white !important;
-        border: none !important;
         border-radius: 8px !important;
-        transition: 0.3s;
+        border: none !important;
+        padding: 0.5rem 1rem !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 6px rgba(0, 86, 179, 0.2);
+        transition: all 0.3s ease;
+        width: 100%;
     }
     div.stButton > button:hover {
-        background-color: #1d4ed8 !important;
-        border-color: #1d4ed8 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 86, 179, 0.3);
+        background: #fdc432 !important; /* Màu vàng Vietravel khi hover */
+        color: #003366 !important;
     }
 
-    /* INPUT & TEXT AREA */
-    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
-        border: 1px solid #3b82f6 !important;
-    }
-
-    /* METRIC BOX */
+    /* 5. Thẻ Metric (Chỉ số doanh thu) */
     [data-testid="metric-container"] {
-        background-color: #ffffff;
-        border: 2px solid #3b82f6;
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
-    }
-    [data-testid="stMetricLabel"] {
-        color: #1e40af !important;
-    }
-    [data-testid="stMetricValue"] {
-        color: #2563eb !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-left: 5px solid #0056b3 !important;
+        border-radius: 12px !important;
+        padding: 20px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
     }
 
-    /* CHAT BOX */
+    /* 6. Khung Chat & Tin nhắn */
     .chat-box {
-        background: white !important;
-        border: 2px solid #3b82f6;
-        border-radius: 15px;
-        height: 500px;
-        overflow-y: auto;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 15px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
     .msg {
-        background-color: #dbeafe !important;
-        color: #1e3a8a !important;
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 8px;
-        border-left: 5px solid #2563eb;
+        background: #f0f9ff !important;
+        color: #0c4a6e !important;
+        border: 1px solid #bae6fd;
+        padding: 12px 16px;
+        border-radius: 12px 12px 12px 2px;
+        margin-bottom: 12px;
+        line-height: 1.5;
     }
 
-    /* DATA FRAME / TABLE */
+    /* 7. Input fields */
+    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+        border-radius: 8px !important;
+        border: 1px solid #cbd5e1 !important;
+        background-color: white !important;
+    }
+    .stTextInput input:focus {
+        border-color: #0056b3 !important;
+        box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1) !important;
+    }
+
+    /* 8. Dataframe & Tables */
     [data-testid="stDataFrame"] {
-        border: 1px solid #bfdbfe;
-        border-radius: 10px;
+        background-color: white !important;
+        border-radius: 12px !important;
+        padding: 10px;
     }
 
-    /* EXPANDER XANH */
-    .streamlit-expanderHeader {
-        background-color: #eff6ff !important;
-        color: #1e40af !important;
-        border-radius: 5px;
+    /* 9. Divider */
+    hr {
+        margin: 2em 0 !important;
+        border: 0;
+        border-top: 1px solid #e2e8f0 !important;
     }
-
-    /* TABS */
-    button[data-baseweb="tab"] {
-        color: #1e40af !important;
-    }
-    button[data-baseweb="tab"][aria-selected="true"] {
-        background-color: #2563eb !important;
-        color: white !important;
-        border-radius: 5px;
-    }
-
-    /* CÁC NÚT LINK TRONG GUIDE CENTER */
+    
+    /* 10. Link Buttons trong Guide Center */
     a[data-testid="stBaseButton-secondary"] {
-        background-color: #2563eb !important;
-        color: white !important;
-        border: none !important;
+        background-color: white !important;
+        color: #003366 !important;
+        border: 1px solid #003366 !important;
+        border-radius: 8px !important;
+    }
+    a[data-testid="stBaseButton-secondary"]:hover {
+        background-color: #f0f9ff !important;
+        border-color: #0056b3 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -1215,6 +1232,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

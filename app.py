@@ -98,88 +98,147 @@ if "customer_list" not in st.session_state:
 
 st.markdown("""
 <style>
-    /* 1. Tổng thể */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    html, body, [data-testid="stAppViewContainer"] {
-        background-color: #f8faff !important;
-        font-family: 'Inter', sans-serif;
-    }
 
-    /* 2. Làm sáng chữ trong các nút và danh sách khách hàng */
-    div.stButton > button {
-        background: linear-gradient(135deg, #0056b3 0%, #003366 100%) !important;
-        color: #ffffff !important; /* Chữ trắng sáng */
-        border-radius: 8px !important;
-        border: none !important;
-        padding: 0.6rem !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 12px rgba(0, 51, 102, 0.15);
-        transition: all 0.2s ease;
-    }
-    
-    div.stButton > button p {
-        color: #ffffff !important; /* Đảm bảo chữ bên trong thẻ p cũng trắng */
-    }
+/* =========================
+   BACKGROUND
+========================= */
 
-    div.stButton > button:hover {
-        background: #fdc432 !important; /* Màu vàng Vietravel khi hover */
-        color: #003366 !important;
-        transform: translateY(-1px);
-    }
+.stApp {
+    background: linear-gradient(135deg, #020617, #0f172a);
+    color: #e2e8f0;
+}
 
-    /* 3. Khu vực Chat rộng rãi (Trả về kích thước cũ) */
-    .chat-box {
-        background: #ffffff !important;
-        border: 1px solid #d1d9e6;
-        border-radius: 12px;
-        height: 60vh; /* Độ cao rộng rãi cho khu vực chat */
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
-    }
-    .chat-area {
-        flex-grow: 1;
-        overflow-y: auto;
-        padding: 20px;
-    }
-    .msg {
-        background: #eef4ff !important;
-        color: #1a3a5f !important;
-        padding: 15px 20px;
-        border-radius: 15px 15px 15px 5px;
-        margin-bottom: 15px;
-        border: 1px solid #d0e1ff;
-        font-size: 16px;
-        max-width: 90%;
-    }
 
-    /* 4. Fix lỗi Selectbox bị nền đen khó nhìn */
-    div[data-baseweb="select"] > div {
-        background-color: white !important;
-        color: #003366 !important;
-    }
-    
-    /* Màu chữ trong dropdown */
-    div[data-baseweb="popover"] ul {
-        background-color: white !important;
-    }
-    div[role="option"] {
-        color: #334155 !important;
-        background-color: white !important;
-    }
-    div[role="option"]:hover {
-        background-color: #f0f7ff !important;
-        color: #0056b3 !important;
-    }
+/* =========================
+   SIDEBAR
+========================= */
 
-    /* 5. Sidebar */
-    [data-testid="stSidebar"] {
-        background-color: #002d59 !important;
-    }
-    [data-testid="stSidebar"] * {
-        color: white !important;
-    }
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #020617, #020617);
+    color: white;
+}
+
+section[data-testid="stSidebar"] * {
+    color: #cbd5e1 !important;
+}
+
+
+/* =========================
+   HEADERS
+========================= */
+
+h1, h2, h3, h4 {
+    color: #f1f5f9 !important;
+}
+
+
+/* =========================
+   CARD / CONTAINER
+========================= */
+
+.block-container {
+    background: transparent;
+}
+
+
+/* =========================
+   METRIC BOX
+========================= */
+
+div[data-testid="metric-container"] {
+    background: linear-gradient(135deg, #020617, #0f172a);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid #1e293b;
+    color: white;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.stButton button {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white !important;
+    border-radius: 10px;
+    border: none;
+    font-weight: 500;
+}
+
+.stButton button:hover {
+    transform: scale(1.03);
+    transition: 0.2s;
+}
+
+
+/* =========================
+   INPUT / TEXTBOX
+========================= */
+
+.stTextInput input,
+.stTextArea textarea {
+    background: #020617 !important;
+    color: white !important;
+    border: 1px solid #1e293b !important;
+    border-radius: 8px;
+}
+
+
+/* =========================
+   SELECTBOX
+========================= */
+
+.stSelectbox div[data-baseweb="select"] > div {
+    background: #020617 !important;
+    color: white !important;
+    border: 1px solid #1e293b !important;
+}
+
+.stSelectbox span {
+    color: white !important;
+}
+
+div[data-baseweb="popover"] {
+    background: #020617 !important;
+    color: white !important;
+}
+
+div[role="option"] {
+    background: #020617 !important;
+    color: white !important;
+}
+
+div[role="option"]:hover {
+    background: #1e293b !important;
+}
+
+
+/* =========================
+   REQUIRE BOX
+========================= */
+
+.require-box {
+    background: linear-gradient(135deg, #020617, #0f172a);
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    color: white !important;
+    border: 1px solid #1e293b;
+}
+
+.require-box * {
+    color: white !important;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+label {
+    color: #cbd5e1 !important;
+}
 
 </style>
 """, unsafe_allow_html=True)
@@ -1204,6 +1263,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

@@ -215,9 +215,28 @@ def delete_row(row_number):
     except:
         return False
 
-# =====================================================
+import io
+import streamlit as st
+
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseDownload
+from google.oauth2.service_account import Credentials
+
+from PyPDF2 import PdfReader
+from docx import Document
+
+
+# =============================
+# CONFIG
+# =============================
+
+DRIVE_FOLDER_ID = "1G3rGv-UflnM4SFU1pAgYqL_Qyv96gTTF"
+
+
+# =============================
 # CONNECT GOOGLE DRIVE
 # =============================
+
 def connect_drive():
 
     scope = ["https://www.googleapis.com/auth/drive.readonly"]
@@ -237,6 +256,7 @@ def connect_drive():
 # =============================
 # READ PDF
 # =============================
+
 def read_pdf_from_bytes(file_bytes):
 
     pdf = PdfReader(file_bytes)
@@ -253,6 +273,7 @@ def read_pdf_from_bytes(file_bytes):
 # =============================
 # READ DOCX
 # =============================
+
 def read_docx_from_bytes(file_bytes):
 
     doc = Document(file_bytes)
@@ -267,69 +288,82 @@ def read_docx_from_bytes(file_bytes):
 # =============================
 # LOAD ALL TOUR DATA FROM DRIVE
 # =============================
+
 def load_drive_tour_data():
 
     if not DRIVE_FOLDER_ID:
         return ""
 
-    service = connect_drive()
+    try:
 
-    results = service.files().list(
-        q=f"'{DRIVE_FOLDER_ID}' in parents and trashed=false",
-        fields="files(id, name)"
-    ).execute()
+        service = connect_drive()
 
-    files = results.get("files", [])
+        results = service.files().list(
+            q=f"'{DRIVE_FOLDER_ID}' in parents and trashed=false",
+            fields="files(id, name, mimeType)",
+            pageSize=100
+        ).execute()
 
-    all_text = ""
+        files = results.get("files", [])
 
-    for file in files:
+        if len(files) == 0:
+            st.warning("⚠️ Folder có nhưng không có file hoặc chưa share quyền.")
+            return ""
 
-        file_id = file["id"]
-        file_name = file["name"].lower()
+        all_text = ""
 
-        request = service.files().get_media(fileId=file_id)
+        for file in files:
 
-        fh = io.BytesIO()
-        downloader = MediaIoBaseDownload(fh, request)
+            file_id = file["id"]
+            file_name = file["name"].lower()
 
-        done = False
-        while not done:
-            status, done = downloader.next_chunk()
+            try:
 
-        fh.seek(0)
+                request = service.files().get_media(fileId=file_id)
 
-        try:
+                fh = io.BytesIO()
+                downloader = MediaIoBaseDownload(fh, request)
 
-            if file_name.endswith(".pdf"):
-                text = read_pdf_from_bytes(fh)
+                done = False
+                while not done:
+                    status, done = downloader.next_chunk()
 
-            elif file_name.endswith(".docx"):
-                text = read_docx_from_bytes(fh)
+                fh.seek(0)
 
-            elif file_name.endswith(".txt"):
-                text = fh.read().decode("utf-8")
+                if file_name.endswith(".pdf"):
+                    text = read_pdf_from_bytes(fh)
 
-            else:
-                text = ""
+                elif file_name.endswith(".docx"):
+                    text = read_docx_from_bytes(fh)
 
-            all_text += "\n" + text
+                elif file_name.endswith(".txt"):
+                    text = fh.read().decode("utf-8")
 
-        except Exception as e:
-            print("Lỗi đọc file:", e)
+                else:
+                    continue
 
-    return all_text
+                all_text += "\n" + text
+
+            except Exception as e:
+                st.error(f"Lỗi đọc file {file_name}: {e}")
+
+        return all_text
+
+    except Exception as e:
+        st.error(f"Lỗi kết nối Drive: {e}")
+        return ""
 
 
 # =============================
 # AI SEARCH TOUR FROM DRIVE DATA
 # =============================
+
 def ai_search_tour_drive(query):
 
     data = load_drive_tour_data()
 
     if not data:
-        return "Không có dữ liệu Drive."
+        return "❌ Không có dữ liệu Drive. Kiểm tra quyền share folder."
 
     prompt = f"""
 Bạn là chuyên gia tư vấn tour Vietravel chuyên nghiệp.

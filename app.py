@@ -99,23 +99,36 @@ if "customer_list" not in st.session_state:
 st.markdown("""
 <style>
 
-/* ===== NỀN TỔNG ===== */
-html, body, [class*="css"]  {
-    background: linear-gradient(135deg, #e0f2fe, #f0f9ff) !important;
+/* ===== NỀN ===== */
+html, body, .stApp {
+    background: linear-gradient(135deg, #e0f2fe, #f8fbff) !important;
     color: #0f172a !important;
 }
 
-/* Main app */
-.stApp {
-    background: linear-gradient(135deg, #e0f2fe, #f0f9ff) !important;
-}
-
-/* Sidebar */
+/* ===== SIDEBAR ===== */
 [data-testid="stSidebar"] {
     background: #dbeafe !important;
 }
 
-/* Button */
+[data-testid="stSidebar"] * {
+    color: #0f172a !important;
+    font-weight: 500;
+}
+
+/* ===== TEXT GLOBAL ===== */
+h1, h2, h3, h4, h5, h6, p, span, label, div {
+    color: #0f172a !important;
+}
+
+/* ===== INPUT ===== */
+.stTextInput input,
+.stTextArea textarea {
+    background: white !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+/* ===== BUTTON ===== */
 .stButton>button {
     background: #2563eb !important;
     color: white !important;
@@ -125,13 +138,11 @@ html, body, [class*="css"]  {
     font-weight: 600;
 }
 
-/* Input box */
-.stTextInput input {
-    background: white !important;
-    color: black !important;
+.stButton>button:hover {
+    background: #1d4ed8 !important;
 }
 
-/* Chat box */
+/* ===== CHAT BOX ===== */
 .chat-box {
     background: white !important;
     border: 1px solid #cbd5e1;
@@ -139,15 +150,52 @@ html, body, [class*="css"]  {
     height: 60vh;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-/* Message */
+.chat-area {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+/* ===== MESSAGE ===== */
 .msg {
     background: #e0f2fe;
     padding: 10px;
     border-radius: 8px;
     margin-bottom: 10px;
     color: #0f172a;
+}
+
+/* ===== METRIC BOX ===== */
+[data-testid="metric-container"] {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* ===== PLACEHOLDER TEXT ===== */
+::placeholder {
+    color: #64748b !important;
+}
+
+/* ===== RADIO / SELECT ===== */
+.stSelectbox div,
+.stRadio label {
+    color: #0f172a !important;
+}
+
+/* ===== EXPANDER ===== */
+.streamlit-expanderHeader {
+    color: #0f172a !important;
+    font-weight: 600;
+}
+
+/* ===== REMOVE DARK OVERLAY ===== */
+[data-testid="stHeader"] {
+    background: transparent !important;
 }
 
 </style>
@@ -1172,6 +1220,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

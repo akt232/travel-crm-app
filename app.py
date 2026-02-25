@@ -259,6 +259,43 @@ footer {visibility: hidden;}
 
 </style>
 """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+
+/* =========================
+   FILE / REQUIREMENT BOX TEXT FIX
+========================= */
+
+.file-box,
+.file-box * {
+    color: white !important;
+}
+
+
+/* Nếu bạn dùng button giả dạng link */
+.require-box {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    color: white !important;
+    font-weight: 500;
+}
+
+.require-box * {
+    color: white !important;
+}
+
+
+/* Hover đẹp hơn */
+.require-box:hover {
+    transform: scale(1.02);
+    transition: 0.2s;
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.25);
+}
+
+</style>
+""", unsafe_allow_html=True)
 # =====================================================
 # CHATGPT FUNCTION
 # =====================================================
@@ -1278,6 +1315,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

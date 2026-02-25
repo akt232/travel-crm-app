@@ -95,47 +95,167 @@ if "customer_list" not in st.session_state:
 # =====================================================
 # CSS
 # =====================================================
-st.markdown('<div class="dashboard-box">', unsafe_allow_html=True)
-
-col1, col2, col3, col4 = st.columns(4)
-
-with col1:
-    st.metric("Khách hôm nay", khach_hom_nay)
-
-with col2:
-    st.metric("Doanh thu hôm nay", doanh_thu_hom_nay)
-
-with col3:
-    st.metric("Tổng khách", tong_khach)
-
-with col4:
-    st.metric("Tổng doanh thu", tong_doanh_thu)
-
-st.markdown('</div>', unsafe_allow_html=True)
 st.markdown("""
 <style>
 
-/* ===== Dashboard Box ===== */
+/* =========================
+   BACKGROUND TOÀN APP
+========================= */
+
+.stApp {
+    background: linear-gradient(135deg, #eaf2fb, #d8e6f7);
+    color: #0f172a;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+section[data-testid="stSidebar"] {
+    background: #1e293b !important;
+    color: white !important;
+}
+
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+
+/* =========================
+   TEXT TOÀN APP
+========================= */
+
+h1, h2, h3, h4, h5, h6 {
+    color: #0f172a !important;
+    font-weight: 700;
+}
+
+label, p, span, div {
+    color: #1e293b !important;
+}
+
+
+/* =========================
+   INPUT BOX / SELECT BOX
+========================= */
+
+.stTextInput input,
+.stNumberInput input,
+.stDateInput input,
+.stSelectbox div[data-baseweb="select"] > div,
+.stTextArea textarea {
+
+    background-color: white !important;
+    color: #0f172a !important;
+    border-radius: 10px !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 8px !important;
+}
+
+
+/* dropdown menu */
+div[data-baseweb="popover"] {
+    background: white !important;
+    color: #0f172a !important;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.stButton button {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white !important;
+    border-radius: 10px;
+    border: none;
+    padding: 10px 18px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.stButton button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+
+/* =========================
+   DASHBOARD BOX
+========================= */
+
 .dashboard-box {
     background: linear-gradient(135deg, #1e293b, #0f172a);
     padding: 25px;
-    border-radius: 14px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    margin-bottom: 25px;
+    border-radius: 16px;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.25);
+    margin-bottom: 20px;
+    color: white !important;
 }
 
-/* chữ metric sáng lên */
-.dashboard-box label,
-.dashboard-box [data-testid="stMetricLabel"] {
-    color: #cbd5e1 !important;
-    font-weight: 600;
+.dashboard-box * {
+    color: white !important;
 }
 
-.dashboard-box [data-testid="stMetricValue"] {
-    color: #f8fafc !important;
-    font-size: 28px;
-    font-weight: 700;
+
+/* =========================
+   METRIC
+========================= */
+
+[data-testid="metric-container"] {
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 15px;
 }
+
+
+/* =========================
+   CARD / BOX NHẸ
+========================= */
+
+.block-container {
+    padding-top: 2rem;
+}
+
+
+/* =========================
+   FILE BOX / LINK BOX
+========================= */
+
+.file-box {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    color: white !important;
+}
+
+
+/* =========================
+   SELECTBOX FIX TEXT
+========================= */
+
+.stSelectbox div {
+    color: #0f172a !important;
+}
+
+
+/* =========================
+   SUCCESS / WARNING / ERROR
+========================= */
+
+.stAlert {
+    border-radius: 10px;
+}
+
+
+/* =========================
+   REMOVE STREAMLIT FOOTER
+========================= */
+
+footer {visibility: hidden;}
+#MainMenu {visibility: hidden;}
 
 </style>
 """, unsafe_allow_html=True)

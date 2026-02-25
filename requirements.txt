@@ -1,7 +1,6 @@
 streamlit
 pandas
 plotly
-google-generativeai
 openai
 gspread
 oauth2client
@@ -9,4 +8,6 @@ requests
 beautifulsoup4
 lxml
 python-docx
-
+PyPDF2
+pdfplumber
+google-generativeai

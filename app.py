@@ -357,32 +357,53 @@ def load_drive_tour_data():
 # =============================
 # AI SEARCH TOUR FROM DRIVE DATA
 # =============================
+def search_relevant_text(data, query, window=1500):
 
+    query = query.lower()
+
+    idx = data.lower().find(query)
+
+    if idx == -1:
+        return data[:window]
+
+    start = max(0, idx - window)
+    end = idx + window
+
+    return data[start:end]
 def ai_search_tour_drive(query):
 
     data = load_drive_tour_data()
 
     if not data:
-        return "❌ Không có dữ liệu Drive. Kiểm tra quyền share folder."
+        return "Không có dữ liệu Drive."
+
+    relevant = search_relevant_text(data, query)
 
     prompt = f"""
-Bạn là chuyên gia tư vấn tour Vietravel chuyên nghiệp.
+Bạn là chuyên gia tư vấn tour Vietravel.
 
-Dữ liệu tour:
-{data}
+QUY TẮC QUAN TRỌNG:
 
-Khách hỏi: {query}
+1. Chỉ được dùng thông tin có trong dữ liệu
+2. Không được tự suy đoán hoặc thêm giá
+3. Nếu không có thông tin → ghi "Chưa có"
+4. Viết nội dung chuyên nghiệp gửi khách
 
-Hãy tư vấn tour phù hợp và xuất nội dung chuyên nghiệp gồm:
+DỮ LIỆU TOUR:
+{relevant}
 
-- Tên tour
-- Giá
-- Thời gian
-- Ngày khởi hành
-- Điểm nổi bật
-- Lịch trình tóm tắt
+KHÁCH HỎI:
+{query}
 
-Viết nội dung tự nhiên để gửi khách hàng.
+Xuất theo format:
+
+Tên tour:
+Code tour:
+Giá:
+Thời gian:
+Ngày khởi hành:
+Điểm nổi bật:
+Lịch trình tóm tắt:
 """
 
     return ask_chatgpt(prompt)

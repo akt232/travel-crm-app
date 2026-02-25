@@ -98,200 +98,103 @@ if "customer_list" not in st.session_state:
 st.markdown("""
 <style>
 
-/* =========================
-   BACKGROUND TOÀN APP
-========================= */
-
-.stApp {
-    background: linear-gradient(135deg, #eaf2fb, #d8e6f7);
-    color: #0f172a;
-}
-
-
-/* =========================
-   SIDEBAR
-========================= */
-
-section[data-testid="stSidebar"] {
-    background: #1e293b !important;
-    color: white !important;
-}
-
-section[data-testid="stSidebar"] * {
-    color: white !important;
-}
-
-
-/* =========================
-   TEXT TOÀN APP
-========================= */
-
-h1, h2, h3, h4, h5, h6 {
-    color: #0f172a !important;
-    font-weight: 700;
-}
-
-label, p, span, div {
-    color: #1e293b !important;
-}
-
-
-/* =========================
-   INPUT BOX / SELECT BOX
-========================= */
-
-.stTextInput input,
-.stNumberInput input,
-.stDateInput input,
-.stSelectbox div[data-baseweb="select"] > div,
-.stTextArea textarea {
-
-    background-color: white !important;
-    color: #0f172a !important;
-    border-radius: 10px !important;
-    border: 1px solid #cbd5e1 !important;
-    padding: 8px !important;
-}
-
-
-/* dropdown menu */
-div[data-baseweb="popover"] {
-    background: white !important;
+/* ===== NỀN ===== */
+html, body, .stApp {
+    background: linear-gradient(135deg, #e0f2fe, #f8fbff) !important;
     color: #0f172a !important;
 }
 
-
-/* =========================
-   BUTTON
-========================= */
-
-.stButton button {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white !important;
-    border-radius: 10px;
-    border: none;
-    padding: 10px 18px;
-    font-weight: 600;
-    transition: 0.2s;
+/* ===== SIDEBAR ===== */
+[data-testid="stSidebar"] {
+    background: #dbeafe !important;
 }
 
-.stButton button:hover {
-    transform: scale(1.05);
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-}
-
-
-/* =========================
-   DASHBOARD BOX
-========================= */
-
-.dashboard-box {
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0px 6px 20px rgba(0,0,0,0.25);
-    margin-bottom: 20px;
-    color: white !important;
-}
-
-.dashboard-box * {
-    color: white !important;
-}
-
-
-/* =========================
-   METRIC
-========================= */
-
-[data-testid="metric-container"] {
-    background: rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 15px;
-}
-
-
-/* =========================
-   CARD / BOX NHẸ
-========================= */
-
-.block-container {
-    padding-top: 2rem;
-}
-
-
-/* =========================
-   FILE BOX / LINK BOX
-========================= */
-
-.file-box {
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    color: white !important;
-}
-
-
-/* =========================
-   SELECTBOX FIX TEXT
-========================= */
-
-.stSelectbox div {
+[data-testid="stSidebar"] * {
     color: #0f172a !important;
-}
-
-
-/* =========================
-   SUCCESS / WARNING / ERROR
-========================= */
-
-.stAlert {
-    border-radius: 10px;
-}
-
-
-/* =========================
-   REMOVE STREAMLIT FOOTER
-========================= */
-
-footer {visibility: hidden;}
-#MainMenu {visibility: hidden;}
-
-</style>
-""", unsafe_allow_html=True)
-st.markdown("""
-<style>
-
-/* =========================
-   FILE / REQUIREMENT BOX TEXT FIX
-========================= */
-
-.file-box,
-.file-box * {
-    color: white !important;
-}
-
-
-/* Nếu bạn dùng button giả dạng link */
-.require-box {
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    color: white !important;
     font-weight: 500;
 }
 
-.require-box * {
-    color: white !important;
+/* ===== TEXT GLOBAL ===== */
+h1, h2, h3, h4, h5, h6, p, span, label, div {
+    color: #0f172a !important;
 }
 
+/* ===== INPUT ===== */
+.stTextInput input,
+.stTextArea textarea {
+    background: white !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+}
 
-/* Hover đẹp hơn */
-.require-box:hover {
-    transform: scale(1.02);
-    transition: 0.2s;
-    box-shadow: 0px 6px 15px rgba(0,0,0,0.25);
+/* ===== BUTTON ===== */
+.stButton>button {
+    background: #2563eb !important;
+    color: white !important;
+    border-radius: 8px;
+    border: none;
+    height: 40px;
+    font-weight: 600;
+}
+
+.stButton>button:hover {
+    background: #1d4ed8 !important;
+}
+
+/* ===== CHAT BOX ===== */
+.chat-box {
+    background: white !important;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.chat-area {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+/* ===== MESSAGE ===== */
+.msg {
+    background: #e0f2fe;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: #0f172a;
+}
+
+/* ===== METRIC BOX ===== */
+[data-testid="metric-container"] {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* ===== PLACEHOLDER TEXT ===== */
+::placeholder {
+    color: #64748b !important;
+}
+
+/* ===== RADIO / SELECT ===== */
+.stSelectbox div,
+.stRadio label {
+    color: #0f172a !important;
+}
+
+/* ===== EXPANDER ===== */
+.streamlit-expanderHeader {
+    color: #0f172a !important;
+    font-weight: 600;
+}
+
+/* ===== REMOVE DARK OVERLAY ===== */
+[data-testid="stHeader"] {
+    background: transparent !important;
 }
 
 </style>
@@ -1315,6 +1218,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

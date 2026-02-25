@@ -10,7 +10,11 @@ from openai import OpenAI
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 from docx import Document
-
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseDownload
+from google.oauth2.service_account import Credentials
+from PyPDF2 import PdfReader
+import io
 
 # =====================================================
 # CONFIG
@@ -21,7 +25,7 @@ CONFIG_FILE = "config.json"
 DEFAULT_SHEET = ""
 DEFAULT_TOUR_SHEET = ""
 DEFAULT_GUIDE_SHEET = "https://docs.google.com/spreadsheets/d/1b7z00QcNuYjK54ikc2ctbxsF3Ok7snGKSx57LChIZpA/edit#gid=0"
-
+DRIVE_FOLDER_ID = ""   # folder chứa file tour trên Google Drive
 LOGO_URL = "https://travel.com.vn/Content/images/logo.png"
 
 st.set_page_config(
@@ -211,7 +215,121 @@ def delete_row(row_number):
     except:
         return False
 
+# =====================================================
+# GOOGLE DRIVE TOUR DATA
+# =====================================================
 
+def connect_drive():
+
+    scope = ["https://www.googleapis.com/auth/drive"]
+
+    creds_dict = st.secrets["gcp_service_account"]
+
+    creds = Credentials.from_service_account_info(
+        creds_dict,
+        scopes=scope
+    )
+
+    service = build("drive", "v3", credentials=creds)
+
+    return service
+
+
+def read_pdf_from_bytes(file_bytes):
+    pdf = PdfReader(file_bytes)
+    text = ""
+
+    for page in pdf.pages:
+        if page.extract_text():
+            text += page.extract_text() + "\n"
+
+    return text
+
+
+def read_docx_from_bytes(file_bytes):
+    doc = Document(file_bytes)
+    return "\n".join([p.text for p in doc.paragraphs])
+
+
+def load_drive_tour_data():
+
+    if not DRIVE_FOLDER_ID:
+        return ""
+
+    service = connect_drive()
+
+    results = service.files().list(
+        q=f"'{DRIVE_FOLDER_ID}' in parents",
+        fields="files(id, name)"
+    ).execute()
+
+    files = results.get("files", [])
+
+    all_text = ""
+
+    for file in files:
+
+        file_id = file["id"]
+        file_name = file["name"].lower()
+
+        request = service.files().get_media(fileId=file_id)
+
+        fh = io.BytesIO()
+
+        downloader = MediaIoBaseDownload(fh, request)
+
+        done = False
+        while not done:
+            status, done = downloader.next_chunk()
+
+        fh.seek(0)
+
+        try:
+
+            if file_name.endswith(".pdf"):
+                text = read_pdf_from_bytes(fh)
+
+            elif file_name.endswith(".docx"):
+                text = read_docx_from_bytes(fh)
+
+            elif file_name.endswith(".txt"):
+                text = fh.read().decode("utf-8")
+
+            else:
+                text = ""
+
+            all_text += "\n" + text
+
+        except:
+            pass
+
+    return all_text
+def ai_search_tour_drive(query):
+
+    data = load_drive_tour_data()
+
+    if not data:
+        return "Không có dữ liệu Drive"
+
+    prompt = f"""
+Bạn là chuyên gia tư vấn tour Vietravel.
+
+Dữ liệu:
+{data}
+
+Khách hỏi: {query}
+
+Hãy xuất thông tin tour chuyên nghiệp gồm:
+- Tên tour
+- Giá
+- Lịch trình
+- Ngày khởi hành
+- Điểm nổi bật
+
+Viết nội dung để gửi khách.
+"""
+
+    return ask_chatgpt(prompt)
 # =====================================================
 # TOUR SUGGEST
 # =====================================================
@@ -496,12 +614,44 @@ Khách nói: {cust['msg']}
             st.session_state.chat_history.append(("Bạn", f"So sánh: {tour1} vs {tour2}"))
             st.session_state.chat_history.append(("AI", res))
 
+        # =============================
+        # AI TRA TOUR DRIVE (NEW)
+        # =============================
+
+        st.divider()
+        st.subheader("📂 AI Tra cứu Tour (Drive)")
+
+        drive_query = st.text_input(
+            "Nhập tên tour cần tìm",
+            placeholder="Ví dụ: Nhật Bản, Hàn Quốc, Úc..."
+        )
+
+        if st.button("🔍 Tìm Tour Drive"):
+
+            if not drive_query:
+                st.warning("Nhập tên tour")
+            else:
+
+                with st.spinner("AI đang đọc dữ liệu Drive..."):
+
+                    result = ai_search_tour_drive(drive_query)
+
+                st.success("✅ Đã tìm thấy thông tin")
+
+                st.text_area(
+                    "Thông tin gửi khách",
+                    result,
+                    height=300
+                )
+
+                # COPY BOX
+                st.code(result, language="text")
+
         # ===== CHAT HISTORY =====
         st.subheader("💬 Lịch sử AI")
 
         for role, msg in st.session_state.chat_history:
             st.write(f"**{role}:** {msg}")
-
 
 # =====================================================
 # CUSTOMERS & ORDERS
@@ -761,6 +911,7 @@ def render_settings():
             "sheet_url": st.session_state.sheet_url,
             "tour_sheet_url": st.session_state.tour_sheet_url,
             "guide_sheet_url": st.session_state.guide_sheet_url,
+            "drive_folder": st.session_state.get("drive_folder", ""),
             "api_key": key
         })
 
@@ -783,16 +934,31 @@ def render_settings():
         value=st.session_state.guide_sheet_url
     )
 
+    # ===============================
+    # NEW — DRIVE TOUR FOLDER
+    # ===============================
+
+    if "drive_folder" not in st.session_state:
+        st.session_state.drive_folder = config.get("drive_folder", "")
+
+    drive_link = st.text_input(
+        "📂 Link Google Drive Folder (Tour Files)",
+        value=st.session_state.drive_folder,
+        placeholder="Dán link folder Google Drive chứa file tour..."
+    )
+
     if st.button("Lưu cấu hình"):
 
         st.session_state.sheet_url = sheet_link
         st.session_state.tour_sheet_url = tour_link
         st.session_state.guide_sheet_url = guide_link
+        st.session_state.drive_folder = drive_link
 
         save_config({
             "sheet_url": sheet_link,
             "tour_sheet_url": tour_link,
             "guide_sheet_url": guide_link,
+            "drive_folder": drive_link,
             "api_key": st.session_state.api_key
         })
 
@@ -830,7 +996,6 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
-
 
 
 

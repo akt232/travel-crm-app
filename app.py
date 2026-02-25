@@ -99,103 +99,75 @@ if "customer_list" not in st.session_state:
 st.markdown("""
 <style>
 
-/* ===== NỀN ===== */
-html, body, .stApp {
-    background: linear-gradient(135deg, #e0f2fe, #f8fbff) !important;
-    color: #0f172a !important;
+/* ===== Background chính ===== */
+.stApp {
+    background-color: #eaf3ff;  /* xanh dương rất nhẹ */
 }
 
-/* ===== SIDEBAR ===== */
-[data-testid="stSidebar"] {
-    background: #dbeafe !important;
+/* ===== Tiêu đề ===== */
+h1, h2, h3, h4, h5, h6 {
+    color: #0b3d91 !important;
+    font-weight: 600;
 }
 
-[data-testid="stSidebar"] * {
-    color: #0f172a !important;
-    font-weight: 500;
+/* ===== Text chung ===== */
+body, p, span, label, div {
+    color: #1f2937 !important;  /* xám đậm dễ đọc */
 }
 
-/* ===== TEXT GLOBAL ===== */
-h1, h2, h3, h4, h5, h6, p, span, label, div {
-    color: #0f172a !important;
+/* ===== Card / container ===== */
+.block-container {
+    background: transparent;
 }
 
-/* ===== INPUT ===== */
-.stTextInput input,
-.stTextArea textarea {
-    background: white !important;
-    color: #0f172a !important;
-    border: 1px solid #cbd5e1 !important;
-}
-
-/* ===== BUTTON ===== */
-.stButton>button {
-    background: #2563eb !important;
+/* ===== Button ===== */
+.stButton button {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white !important;
     border-radius: 8px;
     border: none;
-    height: 40px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
-.stButton>button:hover {
-    background: #1d4ed8 !important;
+.stButton button:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
 }
 
-/* ===== CHAT BOX ===== */
-.chat-box {
-    background: white !important;
-    border: 1px solid #cbd5e1;
-    border-radius: 12px;
-    height: 60vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+/* ===== Input / Textbox ===== */
+.stTextInput input,
+.stSelectbox div[data-baseweb="select"],
+.stTextArea textarea {
+
+    background-color: white !important;
+    color: #111827 !important;
+    border-radius: 8px !important;
+    border: 1px solid #cbd5e1 !important;
 }
 
-.chat-area {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 15px;
+/* placeholder */
+::placeholder {
+    color: #94a3b8 !important;
 }
 
-/* ===== MESSAGE ===== */
-.msg {
-    background: #e0f2fe;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    color: #0f172a;
+/* ===== Selectbox chữ ===== */
+.stSelectbox div {
+    color: #111827 !important;
 }
 
-/* ===== METRIC BOX ===== */
-[data-testid="metric-container"] {
-    background: white;
-    border: 1px solid #e2e8f0;
-    padding: 10px;
+/* ===== Expander / box đen bạn đang dùng ===== */
+div[data-testid="stExpander"] {
+    background: #0f172a !important;
+    color: white !important;
     border-radius: 10px;
 }
 
-/* ===== PLACEHOLDER TEXT ===== */
-::placeholder {
-    color: #64748b !important;
+/* ===== Sidebar ===== */
+section[data-testid="stSidebar"] {
+    background: #dbeafe !important;
 }
 
-/* ===== RADIO / SELECT ===== */
-.stSelectbox div,
-.stRadio label {
+section[data-testid="stSidebar"] * {
     color: #0f172a !important;
-}
-
-/* ===== EXPANDER ===== */
-.streamlit-expanderHeader {
-    color: #0f172a !important;
-    font-weight: 600;
-}
-
-/* ===== REMOVE DARK OVERLAY ===== */
-[data-testid="stHeader"] {
-    background: transparent !important;
 }
 
 </style>
@@ -1220,6 +1192,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

@@ -357,7 +357,7 @@ def load_drive_tour_data():
 # =============================
 # AI SEARCH TOUR FROM DRIVE DATA
 # =============================
-def search_relevant_text(data, query, window=4000):
+def search_relevant_text(data, query, window=8000):
 
     query = query.lower()
 
@@ -375,45 +375,78 @@ def ai_search_tour_drive(query):
     data = load_drive_tour_data()
 
     if not data:
-        return "Không có dữ liệu Drive."
+        return "❌ Không có dữ liệu Drive. Vui lòng kiểm tra Folder ID hoặc quyền chia sẻ."
 
-    relevant = search_relevant_text(data, query)
+    # =============================
+    # TÌM ĐOẠN LIÊN QUAN NHẤT
+    # =============================
+    relevant = search_relevant_text(data, query, window=9000)
 
+    # =============================
+    # PROMPT CHUẨN PRO
+    # =============================
     prompt = f"""
-Bạn là chuyên gia tư vấn tour Vietravel.
+Bạn là chuyên gia sản phẩm Vietravel.
 
 NHIỆM VỤ:
-Trích xuất đầy đủ thông tin tour từ dữ liệu và viết lại cho khách.
+Trích xuất CHÍNH XÁC thông tin tour từ dữ liệu được cung cấp.
 
-QUY TẮC BẮT BUỘC:
+=============================
+QUY TẮC BẮT BUỘC
+=============================
 
-- Không được tự thêm thông tin ngoài dữ liệu
-- Phải viết ĐẦY ĐỦ nhất có thể
-- Nếu thiếu thì ghi: Đang cập nhật
-- Lịch trình phải liệt kê theo Ngày 1, Ngày 2...
-- Không viết quá ngắn
-- Không được tóm tắt mất thông tin quan trọng
+1. CHỈ sử dụng dữ liệu có trong tài liệu
+2. KHÔNG được tự thêm thông tin ngoài dữ liệu
+3. Nếu không thấy thông tin thì ghi: Đang cập nhật
+4. Phải hiển thị ĐẦY ĐỦ tất cả các ngày trong lịch trình
+5. Nếu tour 7 ngày phải có Ngày 1 → Ngày 7
+6. Không được bỏ sót ngày cuối
+7. Không được tóm tắt quá ngắn
+8. Ưu tiên dữ liệu gần từ khóa tìm kiếm: "{query}"
+9. Viết văn phong tư vấn chuyên nghiệp gửi khách hàng
+10. Nội dung phải dài và đầy đủ
 
-DỮ LIỆU TOUR:
+=============================
+DỮ LIỆU TOUR
+=============================
+
 {relevant}
 
-KHÁCH HỎI:
+=============================
+KHÁCH HỎI
+=============================
+
 {query}
 
-Hãy viết nội dung gửi khách chuyên nghiệp gồm:
+=============================
+XUẤT KẾT QUẢ THEO FORMAT
+=============================
 
-📍 Tên tour  
-📍 Mã tour  
-📍 Thời gian  
-📍 Giá  
-📍 Ngày khởi hành  
-📍 Điểm nổi bật  
-📍 Lịch trình chi tiết từng ngày  
+📍 Tên tour:
+📍 Mã tour:
+📍 Thời gian:
+📍 Giá:
+📍 Ngày khởi hành:
 
-Viết rõ ràng dễ copy gửi Zalo.
+📍 Điểm nổi bật:
+
+📍 LỊCH TRÌNH CHI TIẾT:
+
+Ngày 1:
+Ngày 2:
+Ngày 3:
+Ngày 4:
+(Nếu còn ngày phải liệt kê đầy đủ đến ngày cuối)
+
+=============================
+
+Viết nội dung rõ ràng dễ copy gửi Zalo cho khách.
+Không được rút gọn.
 """
 
-    return ask_chatgpt(prompt)
+    result = ask_chatgpt(prompt)
+
+    return result
 # =====================================================
 # TOUR SUGGEST
 # =====================================================

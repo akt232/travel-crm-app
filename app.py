@@ -97,232 +97,103 @@ if "customer_list" not in st.session_state:
 # =====================================================
 st.markdown("""
 <style>
+    /* NỀN CHÍNH */
+    html, body, [data-testid="stAppViewContainer"] {
+        background-color: #f0f7ff !important;
+    }
 
-/* ===== NỀN ===== */
-html, body, .stApp {
-    background: linear-gradient(135deg, #e0f2fe, #f8fbff) !important;
-    color: #0f172a !important;
-}
+    /* SIDEBAR XANH */
+    [data-testid="stSidebar"] {
+        background-color: #1e40af !important;
+    }
+    [data-testid="stSidebar"] * {
+        color: white !important;
+    }
 
-/* ===== SIDEBAR ===== */
-[data-testid="stSidebar"] {
-    background: #dbeafe !important;
-}
+    /* TIÊU ĐỀ & CHỮ */
+    h1, h2, h3, h4, h5, h6, p, label {
+        color: #1e3a8a !important;
+    }
 
-[data-testid="stSidebar"] * {
-    color: #0f172a !important;
-    font-weight: 500;
-}
+    /* NÚT BẤM (BUTTON) */
+    div.stButton > button {
+        background-color: #2563eb !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        transition: 0.3s;
+    }
+    div.stButton > button:hover {
+        background-color: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+    }
 
-/* ===== TEXT GLOBAL ===== */
-h1, h2, h3, h4, h5, h6, p, span, label, div {
-    color: #0f172a !important;
-}
+    /* INPUT & TEXT AREA */
+    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+        border: 1px solid #3b82f6 !important;
+    }
 
-/* ===== INPUT ===== */
-.stTextInput input,
-.stTextArea textarea {
-    background: white !important;
-    color: #0f172a !important;
-    border: 1px solid #cbd5e1 !important;
-}
+    /* METRIC BOX */
+    [data-testid="metric-container"] {
+        background-color: #ffffff;
+        border: 2px solid #3b82f6;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+    }
+    [data-testid="stMetricLabel"] {
+        color: #1e40af !important;
+    }
+    [data-testid="stMetricValue"] {
+        color: #2563eb !important;
+    }
 
-/* ===== BUTTON ===== */
-.stButton>button {
-    background: #2563eb !important;
-    color: white !important;
-    border-radius: 8px;
-    border: none;
-    height: 40px;
-    font-weight: 600;
-}
+    /* CHAT BOX */
+    .chat-box {
+        background: white !important;
+        border: 2px solid #3b82f6;
+        border-radius: 15px;
+        height: 500px;
+        overflow-y: auto;
+    }
+    .msg {
+        background-color: #dbeafe !important;
+        color: #1e3a8a !important;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        border-left: 5px solid #2563eb;
+    }
 
-.stButton>button:hover {
-    background: #1d4ed8 !important;
-}
+    /* DATA FRAME / TABLE */
+    [data-testid="stDataFrame"] {
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+    }
 
-/* ===== CHAT BOX ===== */
-.chat-box {
-    background: white !important;
-    border: 1px solid #cbd5e1;
-    border-radius: 12px;
-    height: 60vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
+    /* EXPANDER XANH */
+    .streamlit-expanderHeader {
+        background-color: #eff6ff !important;
+        color: #1e40af !important;
+        border-radius: 5px;
+    }
 
-.chat-area {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 15px;
-}
+    /* TABS */
+    button[data-baseweb="tab"] {
+        color: #1e40af !important;
+    }
+    button[data-baseweb="tab"][aria-selected="true"] {
+        background-color: #2563eb !important;
+        color: white !important;
+        border-radius: 5px;
+    }
 
-/* ===== MESSAGE ===== */
-.msg {
-    background: #e0f2fe;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    color: #0f172a;
-}
-
-/* ===== METRIC BOX ===== */
-[data-testid="metric-container"] {
-    background: white;
-    border: 1px solid #e2e8f0;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-/* ===== PLACEHOLDER TEXT ===== */
-::placeholder {
-    color: #64748b !important;
-}
-
-/* ===== RADIO / SELECT ===== */
-.stSelectbox div,
-.stRadio label {
-    color: #0f172a !important;
-}
-
-/* ===== EXPANDER ===== */
-.streamlit-expanderHeader {
-    color: #0f172a !important;
-    font-weight: 600;
-}
-
-/* ===== REMOVE DARK OVERLAY ===== */
-[data-testid="stHeader"] {
-    background: transparent !important;
-}
-
-/* =========================
-   SELECTBOX MAIN
-========================= */
-
-.stSelectbox div[data-baseweb="select"] > div {
-    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
-    color: white !important;
-    border-radius: 10px !important;
-    border: 1px solid #2563eb !important;
-}
-
-
-/* Text trong select */
-.stSelectbox span {
-    color: white !important;
-    font-weight: 500;
-}
-
-
-/* Dropdown menu */
-div[data-baseweb="popover"] {
-    background: #1e40af !important;
-    border-radius: 10px !important;
-}
-
-
-/* Item trong dropdown */
-div[role="option"] {
-    background: #1e40af !important;
-    color: white !important;
-}
-
-
-/* Hover item */
-div[role="option"]:hover {
-    background: #2563eb !important;
-    color: white !important;
-}
-
-
-/* Remove viền đỏ focus */
-.stSelectbox div[data-baseweb="select"]:focus-within {
-    box-shadow: 0 0 0 2px #60a5fa !important;
-    border-color: #60a5fa !important;
-}
-
-
-/* Icon dropdown */
-.stSelectbox svg {
-    fill: white !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
-st.markdown("""
-<style>
-
-/* =========================
-   SELECTBOX MAIN BOX
-========================= */
-
-.stSelectbox div[data-baseweb="select"] > div {
-    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
-    color: white !important;
-    border-radius: 10px !important;
-    border: 1px solid #2563eb !important;
-}
-
-
-/* Text selected */
-.stSelectbox div[data-baseweb="select"] span {
-    color: white !important;
-}
-
-
-/* Icon dropdown */
-.stSelectbox svg {
-    fill: white !important;
-}
-
-
-/* =========================
-   DROPDOWN MENU FIX ĐEN
-========================= */
-
-/* Menu container */
-div[data-baseweb="popover"],
-div[data-baseweb="menu"] {
-    background: #1e40af !important;
-    color: white !important;
-}
-
-
-/* Option item */
-div[role="option"] {
-    background: #1e40af !important;
-    color: white !important;
-}
-
-
-/* Hover option */
-div[role="option"]:hover {
-    background: #2563eb !important;
-    color: white !important;
-}
-
-
-/* Selected option */
-div[aria-selected="true"] {
-    background: #3b82f6 !important;
-    color: white !important;
-}
-
-
-/* Remove nền đen sâu bên trong */
-ul, li {
-    background: transparent !important;
-}
-
-
-/* Focus border */
-.stSelectbox div[data-baseweb="select"]:focus-within {
-    border-color: #60a5fa !important;
-    box-shadow: 0 0 0 2px #60a5fa !important;
-}
-
+    /* CÁC NÚT LINK TRONG GUIDE CENTER */
+    a[data-testid="stBaseButton-secondary"] {
+        background-color: #2563eb !important;
+        color: white !important;
+        border: none !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 # =====================================================
@@ -1344,6 +1215,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

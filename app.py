@@ -15,7 +15,7 @@ from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2.service_account import Credentials
 from PyPDF2 import PdfReader
 import io
-
+import re
 # =====================================================
 # CONFIG
 # =====================================================
@@ -216,12 +216,11 @@ def delete_row(row_number):
         return False
 
 # =====================================================
-# GOOGLE DRIVE TOUR DATA
-# =====================================================
-
+# CONNECT GOOGLE DRIVE
+# =============================
 def connect_drive():
 
-    scope = ["https://www.googleapis.com/auth/drive"]
+    scope = ["https://www.googleapis.com/auth/drive.readonly"]
 
     creds_dict = st.secrets["gcp_service_account"]
 
@@ -235,22 +234,39 @@ def connect_drive():
     return service
 
 
+# =============================
+# READ PDF
+# =============================
 def read_pdf_from_bytes(file_bytes):
+
     pdf = PdfReader(file_bytes)
     text = ""
 
     for page in pdf.pages:
-        if page.extract_text():
-            text += page.extract_text() + "\n"
+        page_text = page.extract_text()
+        if page_text:
+            text += page_text + "\n"
 
     return text
 
 
+# =============================
+# READ DOCX
+# =============================
 def read_docx_from_bytes(file_bytes):
+
     doc = Document(file_bytes)
-    return "\n".join([p.text for p in doc.paragraphs])
+
+    text = []
+    for p in doc.paragraphs:
+        text.append(p.text)
+
+    return "\n".join(text)
 
 
+# =============================
+# LOAD ALL TOUR DATA FROM DRIVE
+# =============================
 def load_drive_tour_data():
 
     if not DRIVE_FOLDER_ID:
@@ -259,7 +275,7 @@ def load_drive_tour_data():
     service = connect_drive()
 
     results = service.files().list(
-        q=f"'{DRIVE_FOLDER_ID}' in parents",
+        q=f"'{DRIVE_FOLDER_ID}' in parents and trashed=false",
         fields="files(id, name)"
     ).execute()
 
@@ -275,7 +291,6 @@ def load_drive_tour_data():
         request = service.files().get_media(fileId=file_id)
 
         fh = io.BytesIO()
-
         downloader = MediaIoBaseDownload(fh, request)
 
         done = False
@@ -300,33 +315,40 @@ def load_drive_tour_data():
 
             all_text += "\n" + text
 
-        except:
-            pass
+        except Exception as e:
+            print("Lỗi đọc file:", e)
 
     return all_text
+
+
+# =============================
+# AI SEARCH TOUR FROM DRIVE DATA
+# =============================
 def ai_search_tour_drive(query):
 
     data = load_drive_tour_data()
 
     if not data:
-        return "Không có dữ liệu Drive"
+        return "Không có dữ liệu Drive."
 
     prompt = f"""
-Bạn là chuyên gia tư vấn tour Vietravel.
+Bạn là chuyên gia tư vấn tour Vietravel chuyên nghiệp.
 
-Dữ liệu:
+Dữ liệu tour:
 {data}
 
 Khách hỏi: {query}
 
-Hãy xuất thông tin tour chuyên nghiệp gồm:
+Hãy tư vấn tour phù hợp và xuất nội dung chuyên nghiệp gồm:
+
 - Tên tour
 - Giá
-- Lịch trình
+- Thời gian
 - Ngày khởi hành
 - Điểm nổi bật
+- Lịch trình tóm tắt
 
-Viết nội dung để gửi khách.
+Viết nội dung tự nhiên để gửi khách hàng.
 """
 
     return ask_chatgpt(prompt)

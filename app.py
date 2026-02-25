@@ -75,6 +75,8 @@ if "tour_sheet_url" not in st.session_state:
 
 if "guide_sheet_url" not in st.session_state:
     st.session_state.guide_sheet_url = config.get("guide_sheet_url", DEFAULT_GUIDE_SHEET)
+if "drive_folder" not in st.session_state:
+    st.session_state.drive_folder = config.get("drive_folder", "")
 
 if "selected_customer" not in st.session_state:
     st.session_state.selected_customer = None
@@ -230,7 +232,7 @@ from docx import Document
 # CONFIG
 # =============================
 
-DRIVE_FOLDER_ID = "1G3rGv-UflnM4SFU1pAgYqL_Qyv96gTTF"
+
 
 
 # =============================
@@ -289,17 +291,29 @@ def read_docx_from_bytes(file_bytes):
 # LOAD ALL TOUR DATA FROM DRIVE
 # =============================
 
+def extract_drive_id(link):
+    import re
+    match = re.search(r'/folders/([a-zA-Z0-9_-]+)', link)
+    return match.group(1) if match else link
+
+
 def load_drive_tour_data():
 
-    if not DRIVE_FOLDER_ID:
+    # ===== LẤY FOLDER ID TỪ SESSION =====
+    drive_link = st.session_state.get("drive_folder", "")
+
+    if not drive_link:
+        st.warning("⚠️ Chưa cấu hình Google Drive Folder trong Settings.")
         return ""
+
+    folder_id = extract_drive_id(drive_link)
 
     try:
 
         service = connect_drive()
 
         results = service.files().list(
-            q=f"'{DRIVE_FOLDER_ID}' in parents and trashed=false",
+            q=f"'{folder_id}' in parents and trashed=false",
             fields="files(id, name, mimeType)",
             pageSize=100
         ).execute()
@@ -352,7 +366,6 @@ def load_drive_tour_data():
     except Exception as e:
         st.error(f"Lỗi kết nối Drive: {e}")
         return ""
-
 
 # =============================
 # AI SEARCH TOUR FROM DRIVE DATA

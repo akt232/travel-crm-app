@@ -251,6 +251,80 @@ div[role="option"]:hover {
 
 </style>
 """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+
+/* =========================
+   SELECTBOX MAIN BOX
+========================= */
+
+.stSelectbox div[data-baseweb="select"] > div {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    border: 1px solid #2563eb !important;
+}
+
+
+/* Text selected */
+.stSelectbox div[data-baseweb="select"] span {
+    color: white !important;
+}
+
+
+/* Icon dropdown */
+.stSelectbox svg {
+    fill: white !important;
+}
+
+
+/* =========================
+   DROPDOWN MENU FIX ĐEN
+========================= */
+
+/* Menu container */
+div[data-baseweb="popover"],
+div[data-baseweb="menu"] {
+    background: #1e40af !important;
+    color: white !important;
+}
+
+
+/* Option item */
+div[role="option"] {
+    background: #1e40af !important;
+    color: white !important;
+}
+
+
+/* Hover option */
+div[role="option"]:hover {
+    background: #2563eb !important;
+    color: white !important;
+}
+
+
+/* Selected option */
+div[aria-selected="true"] {
+    background: #3b82f6 !important;
+    color: white !important;
+}
+
+
+/* Remove nền đen sâu bên trong */
+ul, li {
+    background: transparent !important;
+}
+
+
+/* Focus border */
+.stSelectbox div[data-baseweb="select"]:focus-within {
+    border-color: #60a5fa !important;
+    box-shadow: 0 0 0 2px #60a5fa !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 # =====================================================
 # CHATGPT FUNCTION
 # =====================================================
@@ -1270,6 +1344,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

@@ -100,57 +100,12 @@ st.markdown("""
 <style>
 
 /* =========================
-   BACKGROUND
+   APP
 ========================= */
 
 .stApp {
-    background: linear-gradient(135deg, #020617, #0f172a);
+    background: #0f172a;
     color: #e2e8f0;
-}
-
-
-/* =========================
-   SIDEBAR
-========================= */
-
-section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #020617, #020617);
-    color: white;
-}
-
-section[data-testid="stSidebar"] * {
-    color: #cbd5e1 !important;
-}
-
-
-/* =========================
-   HEADERS
-========================= */
-
-h1, h2, h3, h4 {
-    color: #f1f5f9 !important;
-}
-
-
-/* =========================
-   CARD / CONTAINER
-========================= */
-
-.block-container {
-    background: transparent;
-}
-
-
-/* =========================
-   METRIC BOX
-========================= */
-
-div[data-testid="metric-container"] {
-    background: linear-gradient(135deg, #020617, #0f172a);
-    border-radius: 12px;
-    padding: 15px;
-    border: 1px solid #1e293b;
-    color: white;
 }
 
 
@@ -158,30 +113,67 @@ div[data-testid="metric-container"] {
    BUTTON
 ========================= */
 
-.stButton button {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+.stButton > button {
+    background: #1d4ed8 !important;
     color: white !important;
-    border-radius: 10px;
+    border-radius: 6px;
     border: none;
+    height: 40px;
     font-weight: 500;
 }
 
-.stButton button:hover {
-    transform: scale(1.03);
-    transition: 0.2s;
+.stButton > button:hover {
+    background: #2563eb !important;
 }
 
 
 /* =========================
-   INPUT / TEXTBOX
+   CHAT BOX
 ========================= */
 
-.stTextInput input,
-.stTextArea textarea {
-    background: #020617 !important;
-    color: white !important;
-    border: 1px solid #1e293b !important;
+.chat-box {
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================
+   CHAT AREA
+========================= */
+
+.chat-area {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+.msg {
+    background: #334155;
+    padding: 10px 14px;
     border-radius: 8px;
+    margin-bottom: 10px;
+    color: #e2e8f0;
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+.stTextInput input {
+    background: #020617 !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #1e293b !important;
+    border-radius: 6px !important;
 }
 
 
@@ -191,58 +183,21 @@ div[data-testid="metric-container"] {
 
 .stSelectbox div[data-baseweb="select"] > div {
     background: #020617 !important;
-    color: white !important;
+    color: #e2e8f0 !important;
     border: 1px solid #1e293b !important;
-}
-
-.stSelectbox span {
-    color: white !important;
-}
-
-div[data-baseweb="popover"] {
-    background: #020617 !important;
-    color: white !important;
 }
 
 div[role="option"] {
     background: #020617 !important;
-    color: white !important;
+    color: #e2e8f0 !important;
 }
 
 div[role="option"]:hover {
     background: #1e293b !important;
 }
 
-
-/* =========================
-   REQUIRE BOX
-========================= */
-
-.require-box {
-    background: linear-gradient(135deg, #020617, #0f172a);
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    color: white !important;
-    border: 1px solid #1e293b;
-}
-
-.require-box * {
-    color: white !important;
-}
-
-
-/* =========================
-   LABEL
-========================= */
-
-label {
-    color: #cbd5e1 !important;
-}
-
 </style>
 """, unsafe_allow_html=True)
-
 
 # =====================================================
 # CHATGPT FUNCTION
@@ -1263,6 +1218,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

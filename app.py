@@ -197,6 +197,58 @@ h1, h2, h3, h4, h5, h6, p, span, label, div {
     background: transparent !important;
 }
 
+/* =========================
+   SELECTBOX MAIN
+========================= */
+
+.stSelectbox div[data-baseweb="select"] > div {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    border: 1px solid #2563eb !important;
+}
+
+
+/* Text trong select */
+.stSelectbox span {
+    color: white !important;
+    font-weight: 500;
+}
+
+
+/* Dropdown menu */
+div[data-baseweb="popover"] {
+    background: #1e40af !important;
+    border-radius: 10px !important;
+}
+
+
+/* Item trong dropdown */
+div[role="option"] {
+    background: #1e40af !important;
+    color: white !important;
+}
+
+
+/* Hover item */
+div[role="option"]:hover {
+    background: #2563eb !important;
+    color: white !important;
+}
+
+
+/* Remove viền đỏ focus */
+.stSelectbox div[data-baseweb="select"]:focus-within {
+    box-shadow: 0 0 0 2px #60a5fa !important;
+    border-color: #60a5fa !important;
+}
+
+
+/* Icon dropdown */
+.stSelectbox svg {
+    fill: white !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 # =====================================================
@@ -1218,6 +1270,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

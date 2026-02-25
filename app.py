@@ -99,20 +99,9 @@ if "customer_list" not in st.session_state:
 st.markdown("""
 <style>
 
-/* ===== Background chính ===== */
+/* ===== Background tổng ===== */
 .stApp {
-    background-color: #eaf3ff;  /* xanh dương rất nhẹ */
-}
-
-/* ===== Tiêu đề ===== */
-h1, h2, h3, h4, h5, h6 {
-    color: #0b3d91 !important;
-    font-weight: 600;
-}
-
-/* ===== Text chung ===== */
-body, p, span, label, div {
-    color: #1f2937 !important;  /* xám đậm dễ đọc */
+    background: linear-gradient(135deg, #eaf3ff, #d8e9ff);
 }
 
 /* ===== Card / container ===== */
@@ -120,59 +109,57 @@ body, p, span, label, div {
     background: transparent;
 }
 
+/* ===== Input text ===== */
+.stTextInput input {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+}
+
+/* ===== Selectbox ===== */
+.stSelectbox div[data-baseweb="select"] > div {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+}
+
+/* ===== Dropdown menu ===== */
+div[role="listbox"] {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+}
+
+/* ===== File box / expander / custom box ===== */
+.stExpander, .stFileUploader, .stTextArea textarea {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+    border-radius: 10px !important;
+}
+
 /* ===== Button ===== */
 .stButton button {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: white !important;
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    color: white;
     border-radius: 8px;
     border: none;
-    font-weight: 500;
+    font-weight: 600;
 }
 
-.stButton button:hover {
-    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+/* ===== Label ===== */
+label {
+    color: #0f172a !important;
+    font-weight: 600;
 }
 
-/* ===== Input / Textbox ===== */
-.stTextInput input,
-.stSelectbox div[data-baseweb="select"],
-.stTextArea textarea {
-
-    background-color: white !important;
-    color: #111827 !important;
-    border-radius: 8px !important;
-    border: 1px solid #cbd5e1 !important;
-}
-
-/* placeholder */
-::placeholder {
-    color: #94a3b8 !important;
-}
-
-/* ===== Selectbox chữ ===== */
-.stSelectbox div {
-    color: #111827 !important;
-}
-
-/* ===== Expander / box đen bạn đang dùng ===== */
-div[data-testid="stExpander"] {
-    background: #0f172a !important;
-    color: white !important;
-    border-radius: 10px;
-}
-
-/* ===== Sidebar ===== */
-section[data-testid="stSidebar"] {
-    background: #dbeafe !important;
-}
-
-section[data-testid="stSidebar"] * {
+/* ===== Header ===== */
+h1, h2, h3, h4 {
     color: #0f172a !important;
 }
 
 </style>
 """, unsafe_allow_html=True)
-
 # =====================================================
 # CHATGPT FUNCTION
 # =====================================================
@@ -1192,6 +1179,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 

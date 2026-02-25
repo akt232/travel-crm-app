@@ -33,8 +33,6 @@ st.set_page_config(
     page_icon="🌍",
     layout="wide"
 )
-
-st.image("logo.png", width=180)
 # =====================================================
 # LOAD CONFIG
 # =====================================================
@@ -1259,6 +1257,7 @@ elif menu == "Visa Info":
 
 elif menu == "Settings":
     render_settings()
+
 
 
 
